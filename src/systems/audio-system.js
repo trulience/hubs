@@ -25,7 +25,6 @@ function isThreeAudio(node) {
 }
 
 async function enableChromeAEC(gainNode) {
-  return;
   /**
    *  workaround for: https://bugs.chromium.org/p/chromium/issues/detail?id=687574
    *  1. grab the GainNode from the scene's THREE.AudioListener
