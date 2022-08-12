@@ -344,6 +344,7 @@ AFRAME.registerComponent("media-video", {
   },
 
   setupAudio() {
+    if (!this.hasAudioTracks) return;
     this.removeAudio();
 
     if (this.data.videoPaused) {
@@ -416,7 +417,7 @@ AFRAME.registerComponent("media-video", {
             linkedMediaElementAudioSource ||
             this.el.sceneEl.audioListener.context.createMediaElementSource(audioSourceEl);
 
-          this.hasAudioTracks && this.setupAudio();
+          this.setupAudio();
         }
       }
 
