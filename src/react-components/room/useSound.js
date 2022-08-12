@@ -6,9 +6,11 @@ export function useSound({ scene, sound }) {
 
   const playSound = useCallback(
     () => {
-      sfxSystem.playSoundOneShot(sound).connect(analyserRef.current);
+      const listenerPosition = new THREE.Vector3();
+      scene.audioListener.getWorldPosition(listenerPosition);
+      sfxSystem.playPositionalSoundAt(sound, listenerPosition).getOutput().connect(analyserRef.current);
     },
-    [sound, sfxSystem]
+    [scene, sound, sfxSystem]
   );
 
   return { playSound };

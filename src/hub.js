@@ -31,11 +31,6 @@ import "./utils/aframe-overrides";
 // So we disable it here.
 THREE.Cache.enabled = false;
 
-THREE.AudioContext.setContext(new ( window.AudioContext || window.webkitAudioContext )({
-  sampleRate: 8000,
-  latencyHint: "playback"
-}));
-
 import "./utils/logging";
 import { patchWebGLRenderingContext } from "./utils/webgl";
 patchWebGLRenderingContext();
@@ -201,6 +196,9 @@ store.update({ preferences: { shouldPromptForRefresh: false } }); // Clear flag 
 const mediaSearchStore = window.APP.mediaSearchStore;
 const OAUTH_FLOW_PERMS_TOKEN_KEY = "ret-oauth-flow-perms-token";
 const NOISY_OCCUPANT_COUNT = 30; // Above this # of occupants, we stop posting join/leaves/renames
+
+import { AUDIO_CONTEXT_DEFAULTS } from "./systems/audio-system";
+THREE.AudioContext.setContext(new ( window.AudioContext || window.webkitAudioContext )(AUDIO_CONTEXT_DEFAULTS[APP.store.state.preferences.audioQuality]));
 
 const qs = new URLSearchParams(location.search);
 const isMobile = AFRAME.utils.device.isMobile();

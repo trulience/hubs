@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { FormattedMessage } from "react-intl";
 import { ToolbarButton } from "../input/ToolbarButton";
 import { useVolumeMeter } from "../misc/useVolumeMeter";
+import { AudioType } from "../../systems/audio-system";
 
 export function ToolbarMicButton({ scene, ...rest }) {
   const ref = useRef();
@@ -26,7 +27,7 @@ export function ToolbarMicButton({ scene, ...rest }) {
     }
   }, []);
   useVolumeMeter({
-    analyser: scene.systems["hubs-systems"].audioSystem.outboundAnalyser,
+    analyser: scene.systems["hubs-systems"].audioSystem.analysers[AudioType.MEDIA],
     update
   });
   return (

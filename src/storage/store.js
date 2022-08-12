@@ -154,6 +154,7 @@ export const SCHEMA = {
         enableAudioClipping: { type: "bool", default: false },
         audioClippingThreshold: { type: "number", default: 0.2 },
         audioPanningQuality: { type: "string", default: defaultAudioPanningQuality() },
+        audioQuality: { type: "string", default: "high" },
         theme: { type: "string", default: getDefaultTheme()?.name },
         cursorSize: { type: "number", default: 1 },
         nametagVisibility: { type: "string", default: "showAll" },

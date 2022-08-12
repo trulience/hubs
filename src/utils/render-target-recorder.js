@@ -1,3 +1,5 @@
+import { AudioType } from "../systems/audio-system";
+
 const { detect } = require("detect-browser");
 const browser = detect();
 
@@ -23,7 +25,7 @@ function blitFramebuffer(renderer, src, srcX0, srcY0, srcX1, srcY1, dest, dstX0,
   }
 }
 const createBlankAudioTrack = () => {
-  const context = THREE.AudioContext.getContext();
+  const context = AFRAME.scenes[0].systems["hubs-systems"].audioSystem.audioContexts[AudioType.MEDIA];
   const oscillator = context.createOscillator();
   const gain = context.createGain();
   const destination = context.createMediaStreamDestination();

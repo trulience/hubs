@@ -3,6 +3,7 @@ import { waitForDOMContentLoaded } from "../utils/async-utils";
 import { easeOutQuadratic } from "../utils/easing";
 import { registerComponentInstance, deregisterComponentInstance } from "../utils/component-utils";
 import { MediaDevicesEvents } from "../utils/media-devices-utils";
+import { AudioType } from "../systems/audio-system";
 
 // This computation is expensive, so we run on at most one avatar per frame, including quiet avatars.
 // However if we detect an avatar is seen speaking (its volume is above DISABLE_AT_VOLUME_THRESHOLD)
@@ -85,7 +86,7 @@ AFRAME.registerComponent("networked-audio-analyser", {
   _setSoundSource: function(event) {
     this._unsetSoundSource(event);
     this.soundSource = event.detail.soundSource;
-    const ctx = THREE.AudioContext.getContext();
+    const ctx = AFRAME.scenes[0].systems["hubs-systems"].audioSystem.audioContexts[AudioType.MEDIA];
     this.analyser = ctx.createAnalyser();
     this.analyser.fftSize = 32;
     this.levels = new Uint8Array(this.analyser.fftSize);

@@ -19,6 +19,7 @@ import URL_SPEAKER_TONE from "../assets/sfx/tone.mp3";
 import { setMatrixWorld } from "../utils/three-utils";
 import { SourceType } from "../components/audio-params";
 import { getOverriddenPanningModelType } from "../update-audio-settings";
+import { AudioType } from "./audio-system";
 
 let soundEnum = 0;
 export const SOUND_HOVER_OR_GRAB = soundEnum++;
@@ -62,7 +63,6 @@ export class SoundEffectsSystem {
     this.positionalAudiosStationary = [];
     this.positionalAudiosFollowingObject3Ds = [];
 
-    this.audioContext = THREE.AudioContext.getContext();
     this.scene = scene;
 
     const soundsAndUrls = [
@@ -99,7 +99,7 @@ export class SoundEffectsSystem {
       if (!audioBufferPromise) {
         audioBufferPromise = fetch(url)
           .then(r => r.arrayBuffer())
-          .then(arrayBuffer => decodeAudioData(this.audioContext, arrayBuffer));
+          .then(arrayBuffer => decodeAudioData(APP.audioSystem.audioContexts[AudioType.SFX], arrayBuffer));
         loading.set(url, audioBufferPromise);
       }
       return audioBufferPromise;
@@ -129,9 +129,10 @@ export class SoundEffectsSystem {
     if (!audioBuffer) return null;
     // The nodes are very inexpensive to create, according to
     // https://developer.mozilla.org/en-US/docs/Web/API/AudioBufferSourceNode
-    const source = this.audioContext.createBufferSource();
+    const audioSystem = this.scene.systems["hubs-systems"].audioSystem;
+    const source = audioSystem.audioContexts[AudioType.SFX].createBufferSource();
     source.buffer = audioBuffer;
-    this.scene.systems["hubs-systems"].audioSystem.addAudio({ sourceType: SourceType.SFX, node: source });
+    audioSystem.addAudio({ sourceType: SourceType.SFX, node: source });
     source.loop = loop;
     this.pendingAudioSourceNodes.push(source);
     return source;
@@ -156,7 +157,7 @@ export class SoundEffectsSystem {
     }
     this.pendingPositionalAudios.push(positionalAudio);
     this.scene.systems["hubs-systems"].audioSystem.addAudio({
-      sourceType: SourceType.SFX,
+      sourceType: SourceType.MEDIA_VIDEO,
       node: positionalAudio
     });
     return positionalAudio;
@@ -168,6 +169,7 @@ export class SoundEffectsSystem {
     positionalAudio.position.copy(position);
     positionalAudio.matrixWorldNeedsUpdate = true;
     this.positionalAudiosStationary.push(positionalAudio);
+    return positionalAudio;
   }
 
   playPositionalSoundFollowing(sound, object3D, loop) {
@@ -190,11 +192,12 @@ export class SoundEffectsSystem {
     const audioBuffer = this.sounds.get(sound);
     if (!audioBuffer) return null;
 
-    const source = this.audioContext.createBufferSource();
-    const gain = this.audioContext.createGain();
+    const audioSystem = this.scene.systems["hubs-systems"].audioSystem;
+    const source = audioSystem.audioContexts[AudioType.SFX].createBufferSource();
+    const gain = audioSystem.audioContexts[AudioType.SFX].createGain();
     source.buffer = audioBuffer;
     source.connect(gain);
-    this.scene.systems["hubs-systems"].audioSystem.addAudio({ sourceType: SourceType.SFX, node: gain });
+    audioSystem.audioContexts[AudioType.SFX].addAudio({ sourceType: SourceType.SFX, node: gain });
     source.loop = true;
     this.pendingAudioSourceNodes.push(source);
     return { gain, source };

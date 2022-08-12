@@ -25,6 +25,8 @@ import { MediaDevices, MediaDevicesEvents } from "./utils/media-devices-utils";
 import { addComponent, removeEntity } from "bitecs";
 import { MyCameraTool } from "./bit-components";
 import { anyEntityWith } from "./utils/bit-utils";
+import { SourceType } from "./components/audio-params";
+import { AudioType } from "./systems/audio-system";
 
 export default class SceneEntryManager {
   constructor(hubChannel, authChannel, history) {
@@ -514,7 +516,7 @@ export default class SceneEntryManager {
       if (isNaN(audioVolume)) {
         audioVolume = 1.0;
       }
-      const audioContext = THREE.AudioContext.getContext();
+      const audioContext = AFRAME.scenes[0].systems["hubs-systems"].audioSystem.audioContexts[AudioType.MEDIA];
       const audioSource = audioContext.createMediaStreamSource(audioStream);
       const audioDestination = audioContext.createMediaStreamDestination();
       const gainNode = audioContext.createGain();

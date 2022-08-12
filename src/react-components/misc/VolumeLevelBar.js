@@ -4,6 +4,7 @@ import classNames from "classnames";
 import styles from "./LevelBar.scss";
 import { LevelBar } from "./LevelBar";
 import { useVolumeMeter } from "../misc/useVolumeMeter";
+import { AudioType } from "../../systems/audio-system";
 
 export const types = ["mic", "mixer"];
 
@@ -23,7 +24,7 @@ export function VolumeLevelBar({ scene, type, className }) {
   useVolumeMeter({
     analyser:
       type == "mic"
-        ? scene.systems["hubs-systems"].audioSystem.outboundAnalyser
+        ? scene.systems["hubs-systems"].audioSystem.analysers[AudioType.MEDIA]
         : scene.systems["hubs-systems"].audioSystem.mixerAnalyser,
     update
   });

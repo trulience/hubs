@@ -19,6 +19,7 @@ import { SOUND_CAMERA_TOOL_COUNTDOWN, SOUND_CAMERA_TOOL_TOOK_SNAPSHOT } from "..
 import { paths } from "../systems/userinput/paths";
 import { ObjectTypes } from "../object-types";
 import { anyEntityWith } from "../utils/bit-utils";
+import { AudioType } from "../systems/audio-system";
 
 // Prefer h264 if available due to faster decoding speec on most platforms
 const videoCodec = ["h264", "vp9,opus", "vp8,opus", "vp9", "vp8"].find(
@@ -96,11 +97,12 @@ function createRecorder(captureAudio) {
   // if no audio comes through on the listener source. (Eg the room is otherwise silent.)
   // So for now, if we don't have a track, just disable audio capture.
   if (captureAudio && APP.dialog._micProducer?.track) {
-    const context = THREE.AudioContext.getContext();
+    const audioSystem = AFRAME.scenes[0].systems["hubs-systems"].audioSystem;
+    const context = audioSystem.audioContexts[AudioType.MEDIA];
     const destination = context.createMediaStreamDestination();
     if (APP.audioListener) {
       // NOTE audio is not captured from camera vantage point for now.
-      APP.audioListener.getInput().connect(destination);
+      audioSystem.audioDestinations[AudioType.MEDIA].connect(destination);
     }
     context.createMediaStreamSource(new MediaStream([APP.dialog._micProducer?.track])).connect(destination);
     srcAudioTrack = destination.stream.getAudioTracks()[0];
