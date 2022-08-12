@@ -151,6 +151,7 @@ AFRAME.registerComponent("name-tag", {
           this.nametagVolume.matrixNeedsUpdate = true;
           this.nametagTyping.visible = false;
         } else {
+          this.nametagVolume.visible = false;
           if (this.isTyping) {
             this.nametagTyping.visible = true;
             typingAnimTime = t;
