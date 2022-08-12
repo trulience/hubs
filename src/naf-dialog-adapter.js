@@ -58,6 +58,7 @@ export class DialogAdapter extends EventEmitter {
     this.scene = null;
     this._serverParams = {};
     this._consumerStats = {};
+    this._closedConsumers = new Map();
   }
 
   get consumerStats() {
@@ -322,6 +323,10 @@ export class DialogAdapter extends EventEmitter {
               this.emitRTCEvent("info", "RTC", () => `Consumer resumed`);
               this.emit("consumer_resume", consumer.appData.peerId, consumer.kind);
             });
+            consumer.observer.on("close", () => {
+              this.emitRTCEvent("info", "RTC", () => `Consumer closed`);
+              this.emit("consumer_pause", consumer.appData.peerId, consumer.kind);
+            });
 
             consumer.on("transportclose", () => {
               this.emitRTCEvent("error", "RTC", () => `Consumer transport closed`);
@@ -343,6 +348,8 @@ export class DialogAdapter extends EventEmitter {
             accept();
 
             this.resolvePendingMediaRequestForTrack(peerId, consumer.track);
+
+            this.emit("consumer_resume", peerId, kind);
 
             // Notify of an stream update event
             this.emit("stream_updated", peerId, kind);
@@ -384,6 +391,7 @@ export class DialogAdapter extends EventEmitter {
 
           consumer.close();
           this.removeConsumer(consumer.id);
+          this._closedConsumers.delete(consumer.appData.peerId);
 
           break;
         }
@@ -983,8 +991,8 @@ export class DialogAdapter extends EventEmitter {
     return this._micProducer && !this._micProducer.paused;
   }
 
-  pauseConsumer(clientId) {
-    const consumer = Array.from(this._consumers.values()).filter((consumer) => consumer.appData.peerId === clientId).pop();
+  pauseConsumer(clientId, kind) {
+    const consumer = Array.from(this._consumers.values()).filter((consumer) => consumer.appData.peerId === clientId && consumer.kind === kind).pop();
     if (consumer) {
       this._protoo
         .request("pauseConsumer", {
@@ -992,6 +1000,7 @@ export class DialogAdapter extends EventEmitter {
         })
         .then(() => {
           console.log("pauseConsumer");
+          consumer.pause();
         })
         .catch((err) => {
           console.error("pauseConsumer", err);
@@ -1008,9 +1017,47 @@ export class DialogAdapter extends EventEmitter {
         })
         .then(() => {
           console.log("resumeConsumer");
+          consumer.resume();
         })
         .catch((err) => {
           console.error("resumeConsumer", err);
+        });
+    }
+  }
+
+  closeConsumer(clientId, kind) {
+    const consumer = Array.from(this._consumers.values()).filter((consumer) => consumer.appData.peerId === clientId && consumer.kind === kind).pop();
+    if (consumer) {
+      this._protoo
+        .request("closeConsumer", {
+          consumerId: consumer.id
+        })
+        .then(() => {
+          console.log("closeConsumer");
+          consumer.close();
+          this.removeConsumer(consumer.id);
+          this._closedConsumers.set(clientId, consumer.producerId);
+        })
+        .catch((err) => {
+          console.error("closeConsumer", err);
+        });
+    }
+  }
+
+  createConsumer(clientId) {
+    const closedProducerId = this._closedConsumers.get(clientId);
+    if (closedProducerId) {
+      this._protoo
+        .request("createConsumer", {
+          producerPeerId: clientId,
+          producerId: closedProducerId
+        })
+        .then(() => {
+          console.log("createConsumer");
+          this._closedConsumers.delete(clientId);
+        })
+        .catch((err) => {
+          console.error("createConsumer", err);
         });
     }
   }

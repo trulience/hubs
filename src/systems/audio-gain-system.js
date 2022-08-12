@@ -81,7 +81,7 @@ export class GainSystem {
           if (sourceType === SourceType.AVATAR_AUDIO_SOURCE) {
             getClientId(el).then(peerId => {
               if (peerId) {
-                APP.dialog.pauseConsumer(peerId);
+                APP.dialog.closeConsumer(peerId, "audio");
                 APP.supplementaryAttenuation.delete(el);
                 el.components["avatar-audio-source"].removeAudio();
                 const nameTagEl = el.querySelector("[name-tag]");
@@ -96,7 +96,7 @@ export class GainSystem {
           if (sourceType === SourceType.AVATAR_AUDIO_SOURCE) {
             getClientId(el).then(peerId => {
               if (peerId) {
-                APP.dialog.resumeConsumer(peerId);
+                APP.dialog.createConsumer(peerId);
                 el.components["avatar-audio-source"].createAudio();
                 const nameTagEl = el.querySelector("[name-tag]");
                 nameTagEl && nameTagEl.components["name-tag"].consumerResume();
