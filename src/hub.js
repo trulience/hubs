@@ -31,6 +31,11 @@ import "./utils/aframe-overrides";
 // So we disable it here.
 THREE.Cache.enabled = false;
 
+THREE.AudioContext.setContext(new ( window.AudioContext || window.webkitAudioContext )({
+  sampleRate: 8000,
+  latencyHint: "playback"
+}));
+
 import "./utils/logging";
 import { patchWebGLRenderingContext } from "./utils/webgl";
 patchWebGLRenderingContext();
