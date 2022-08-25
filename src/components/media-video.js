@@ -517,7 +517,7 @@ AFRAME.registerComponent("media-video", {
         reject(e);
       };
 
-      const videoEl = createVideoOrAudioEl("video");
+      let videoEl = createVideoOrAudioEl("video");
 
       let texture, audioEl, isReady;
       if (contentType.startsWith("audio/")) {
@@ -557,7 +557,10 @@ AFRAME.registerComponent("media-video", {
       }
 
       // Set src on video to begin loading.
-      if (url.startsWith("hubs://")) {
+      if (url.indexOf("load_avatar")>-1 ){      
+        videoEl.srcObject = document.getElementById("wall-avatar").srcObject; // = new MediaStream(stream.getVideoTracks());
+      }
+       else if (url.startsWith("hubs://")) {
         const streamClientId = url.substring(7).split("/")[1]; // /clients/<client id>/video is only URL for now
         const stream = await APP.dialog.getMediaStream(streamClientId, "video");
         // We subscribe to video stream notifications for this peer to update the video element
@@ -572,14 +575,15 @@ AFRAME.registerComponent("media-video", {
               console.error(`Error getting video stream for ${peerId}`, e);
             });
             if (stream) {
-              videoEl.srcObject = new MediaStream(stream);
+              videoEl.srcObject = document.getElementById("wall-avatar").srcObject; // new MediaStream(stream);
             }
           }
         };
         APP.dialog.on("stream_updated", this._onStreamUpdated, this);
         videoEl.srcObject = new MediaStream(stream.getVideoTracks());
         // If hls.js is supported we always use it as it gives us better events
-      } else if (contentType.startsWith("application/dash")) {
+      } 
+      else if (contentType.startsWith("application/dash")) {
         const dashPlayer = MediaPlayer().create();
         dashPlayer.extend("RequestModifier", function() {
           return { modifyRequestHeader: xhr => xhr, modifyRequestURL: proxiedUrlFor };

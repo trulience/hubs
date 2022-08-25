@@ -5,6 +5,7 @@ import { ReactComponent as CameraIcon } from "../icons/Camera.svg";
 // import { ReactComponent as TextIcon } from "../icons/Text.svg";
 // import { ReactComponent as LinkIcon } from "../icons/Link.svg";
 import { ReactComponent as GIFIcon } from "../icons/GIF.svg";
+import { ReactComponent as TruIcon } from "../icons/Shield.svg";
 import { ReactComponent as ObjectIcon } from "../icons/Object.svg";
 import { ReactComponent as AvatarIcon } from "../icons/Avatar.svg";
 import { ReactComponent as SceneIcon } from "../icons/Scene.svg";
@@ -68,6 +69,13 @@ export function PlacePopoverContainer({ scene, mediaSearchStore, showNonHistorie
               color: "accent1",
               label: <FormattedMessage id="place-popover.item-type.avatar" defaultMessage="Avatar" />,
               onSelect: () => mediaSearchStore.sourceNavigate("avatars")
+            },
+            {
+              id: "avatar2",
+              icon: TruIcon,
+              color: "accent1",
+              label: <FormattedMessage id="place-popover.item-type.avatar2" defaultMessage="Trulience" />,
+              onSelect: () => window.startCall()
             },
             {
               id: "scene",

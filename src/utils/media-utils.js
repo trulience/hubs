@@ -175,6 +175,9 @@ export const addMedia = (
       entity.appendChild(templateBody.firstElementChild);
     }
   }
+  
+  //entity.setAttribute('material', 'shader', 'chromakey');
+	//entity.setAttribute('material', 'alphaTest', '0.5');
 
   const needsToBeUploaded = src instanceof File;
 
@@ -207,6 +210,7 @@ export const addMedia = (
       resolve(1);
     }
   });
+  
   if (needsToBeUploaded) {
     // Video camera videos are converted to mp4 for compatibility
     const desiredContentType = contentSubtype === "video-camera" ? "video/mp4" : src.type || guessContentType(src.name);
@@ -226,7 +230,9 @@ export const addMedia = (
       });
   } else if (src instanceof MediaStream) {
     entity.setAttribute("media-loader", { src: `hubs://clients/${NAF.clientId}/video` });
-  }
+  } else if (src == "load_avatar") {
+    entity.setAttribute("media-loader", { src: "hubs://clients/load_avatar/video" });
+  } 
 
   if (contentOrigin) {
     entity.addEventListener("media_resolved", ({ detail }) => {
@@ -562,3 +568,7 @@ export function hasAudioTracks(el) {
     return false;
   }
 }
+
+
+
+

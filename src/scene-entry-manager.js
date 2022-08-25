@@ -207,6 +207,7 @@ export default class SceneEntryManager {
 
   _setupMedia = () => {
     const offset = { x: 0, y: 0, z: -1.5 };
+   
     const spawnMediaInfrontOfPlayer = (src, contentOrigin) => {
       if (!this.hubChannel.can("spawn_and_move_media")) return;
       const { entity, orientation } = addMedia(
@@ -217,6 +218,7 @@ export default class SceneEntryManager {
         !(src instanceof MediaStream),
         true
       );
+
       orientation.then(or => {
         entity.setAttribute("offset-relative-to", {
           target: "#avatar-pov-node",
@@ -228,9 +230,33 @@ export default class SceneEntryManager {
       return entity;
     };
 
+    this.scene.addEventListener("load_avatar", e => {
+    if (!this.hubChannel.can("spawn_and_move_media")) return;
+
+      const { entity, orientation } = addMedia(
+        "load_avatar",
+        "#interactable-media",
+        null,
+        null,
+        false,
+        true
+      );
+
+      //entity.setAttribute("ben", {x: 0, y: 1, z: 0});      
+      orientation.then(or => {
+        entity.setAttribute("offset-relative-to", {
+          target: "#avatar-pov-node",
+          offset,
+          orientation: or
+        });
+
+
+      });
+      
+    });
+
     this.scene.addEventListener("add_media", e => {
       const contentOrigin = e.detail instanceof File ? ObjectContentOrigins.FILE : ObjectContentOrigins.URL;
-
       spawnMediaInfrontOfPlayer(e.detail, contentOrigin);
     });
 
