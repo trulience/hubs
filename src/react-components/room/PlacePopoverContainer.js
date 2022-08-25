@@ -75,7 +75,7 @@ export function PlacePopoverContainer({ scene, mediaSearchStore, showNonHistorie
               icon: TruIcon,
               color: "accent1",
               label: <FormattedMessage id="place-popover.item-type.avatar2" defaultMessage="Trulience" />,
-              onSelect: () => window.startCall()
+              onSelect: () => window.loadTruAvatar()
             },
             {
               id: "scene",

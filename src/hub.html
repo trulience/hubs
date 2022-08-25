@@ -1297,7 +1297,7 @@
 
 <script>
     let trl = null;
-
+    let trl_connected= false;
 function getParameterByName(name, url = window.location.href) {
   name = name.replace(/[\[\]]/g, '\\$&');
   var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
@@ -1313,7 +1313,12 @@ function getParameterByName(name, url = window.location.href) {
             }
 
             tru_connect = ( resp ) => {
+                trl_connected=true;
                 window.APP.entryManager.scene.emit("load_avatar");
+            }
+
+            tru_disconnect = ( resp ) => {
+                trl_connected=false;
             }
 
             let authEventsCB = {
@@ -1324,7 +1329,8 @@ function getParameterByName(name, url = window.location.href) {
             }
 
             let mediaEventsCB = {
-                onConnected: tru_connect
+                onConnected: tru_connect,
+                onDisconnected: tru_disconnect
             }
 
             let videoElements = {
@@ -1354,11 +1360,20 @@ function getParameterByName(name, url = window.location.href) {
             trl.disconnectGateway();
         }
 
+        function loadTruAvatar() {
+            if (trl_connected) {
+                window.APP.entryManager.scene.emit("load_avatar");
+            }
+            else 
+            {
+                startCall();
+            }
+        }
         function startCall() {
             trl.connectGateway();
         }
 
-        function endCall(reason) {
+        function endCall(reason) {        
             trl.disconnectGateway(reason);
         }
 
