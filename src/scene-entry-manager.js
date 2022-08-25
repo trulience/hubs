@@ -235,23 +235,25 @@ export default class SceneEntryManager {
 
       const { entity, orientation } = addMedia(
         "load_avatar",
-        "#interactable-media",
+        "#static-media4",
         null,
         null,
         false,
         true
       );
 
-      //entity.setAttribute("ben", {x: 0, y: 1, z: 0});      
+      entity.setAttribute("ben", "rr");   
+      
+      //AFRAME.scenes[0].appendChild(entity);   
+      ///*
       orientation.then(or => {
         entity.setAttribute("offset-relative-to", {
           target: "#avatar-pov-node",
           offset,
           orientation: or
         });
-
-
       });
+      //*/
       
     });
 
