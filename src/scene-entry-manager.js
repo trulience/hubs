@@ -235,7 +235,8 @@ export default class SceneEntryManager {
 
       const { entity, orientation } = addMedia(
         "load_avatar",
-        "#static-media4",
+        //"#static-media4",
+        "#interactable-media",
         null,
         null,
         false,
@@ -243,7 +244,6 @@ export default class SceneEntryManager {
       );
 
       entity.setAttribute("ben", "rr");   
-      
       //AFRAME.scenes[0].appendChild(entity);   
       ///*
       orientation.then(or => {

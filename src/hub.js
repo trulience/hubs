@@ -61,7 +61,7 @@ import { addAnimationComponents } from "./utils/animation";
 import Cookies from "js-cookie";
 import { DialogAdapter, DIALOG_CONNECTION_ERROR_FATAL, DIALOG_CONNECTION_CONNECTED } from "./naf-dialog-adapter";
 import "./change-hub";
-
+import { loadTruAvatar, bw} from "./tru"
 import "./components/scene-components";
 import "./components/mute-mic";
 import "./components/bone-mute-state-indicator";
@@ -200,6 +200,9 @@ window.APP.RENDER_ORDER = {
   CURSOR: 3
 };
 
+window.APP.loadTruAvatar=loadTruAvatar;
+window.APP.bw=bw; 
+
 const store = window.APP.store;
 store.update({ preferences: { shouldPromptForRefresh: false } }); // Clear flag that prompts for refresh from preference screen
 const mediaSearchStore = window.APP.mediaSearchStore;
@@ -318,6 +321,7 @@ const history = routerBaseName === "/" ? createMemoryHistory() : createBrowserHi
 window.APP.history = history;
 
 const qsVREntryType = qs.get("vr_entry_type");
+
 
 function mountUI(props = {}) {
   const scene = document.querySelector("a-scene");
