@@ -23,6 +23,8 @@ import { isSafari } from "../utils/detect-safari";
 import { isIOS as detectIOS } from "../utils/is-mobile";
 
 import qsTruthy from "../utils/qs_truthy";
+import GLProgram from "./wgl/GLProgram";
+import { createTexture, FSQuadProgram, getFullscreenQuad, updateTexture } from "./wgl/GLUtils";
 
 const ONCE_TRUE = { once: true };
 const TYPE_IMG_PNG = { type: "image/png" };
@@ -88,6 +90,12 @@ AFRAME.registerComponent("media-video", {
     this.changeVolumeBy = this.changeVolumeBy.bind(this);
     this.togglePlaying = this.togglePlaying.bind(this);
     this.setupAudio = this.setupAudio.bind(this);
+
+    this.canvas = document.createElement('canvas');
+    this.gl = this.canvas.getContext("webgl2");
+    this.uniformsBlock=new Map();
+    this.program;
+    this.setupCustomWGL();
 
     this.audioSystem = this.el.sceneEl.systems["hubs-systems"].audioSystem;
 
@@ -498,11 +506,40 @@ AFRAME.registerComponent("media-video", {
     this.el.emit("video-loaded", { projection: projection });
   },
 
+
+  setupCustomWGL(){
+    this.gl.clearColor(0.1, 0.2, 0.3, 1.0);
+    this.gl.viewport(0, 0, 512,512);
+    this.program = new GLProgram(this.gl,FSQuadProgram.vertexShader,FSQuadProgram.fragmentShader);
+    this.uniformsBlock.set("sampler",this.gl.getUniformLocation(this.program._program,"sampler"));
+    this.quad = getFullscreenQuad(this.gl);
+    this.vTexture = createTexture(this.gl);
+  },
+
+  renderLoop(){
+    this.gl.clear(this.gl.COLOR_BUFFER_BIT);
+    this.program.bind();
+
+    this.gl.uniform1i(this.uniformsBlock.get("sampler"), 0);
+    
+
+    this.gl.activeTexture(this.gl.TEXTURE0);
+    this.gl.bindTexture(this.gl.TEXTURE_2D, this.vTexture);
+    this.gl.bindVertexArray(this.quad.vao)
+    this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.quad.ibo);
+    this.gl.drawElements(this.quad.drawCommand, this.quad.drawCount, this.gl.UNSIGNED_INT, 0);
+    this.program.unbind();
+
+    if (this.canUpdate && this.timeupdate)
+      updateTexture(this.gl,this.vTexture,this.videoEl);
+    //requestAnimationFrame(this.renderLoop());
+  },
+
   async createVideoTextureAudioSourceEl() {
     const url = this.data.src;
     const contentType = this.data.contentType;
     let pollTimeout;
-
+    this.renderLoop();
     return new Promise(async (resolve, reject) => {
       if (this._audioSyncInterval) {
         clearInterval(this._audioSyncInterval);
@@ -518,6 +555,22 @@ AFRAME.registerComponent("media-video", {
       };
 
       let videoEl = createVideoOrAudioEl("video");
+      videoEl.addEventListener(
+        "playing",
+        function () {
+          console.log("canupdate");
+          this.canUpdate = true;
+        },
+        true
+      );
+      videoEl.addEventListener(
+        "timeupdate",
+        function () {
+          this.timeupdate = true;
+        },
+        true
+      );
+      
 
       let texture, audioEl, isReady;
       if (contentType.startsWith("audio/")) {
@@ -765,6 +818,7 @@ AFRAME.registerComponent("media-video", {
   },
 
   tick: (() => {
+    console.log("??");
     return function() {
       if (!this.video) return;
 
