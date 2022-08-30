@@ -76,6 +76,8 @@
     "@mozillareality/easing-functions": "^0.1.1",
     "@popperjs/core": "^2.4.4",
     "aframe": "github:mozillareality/aframe#hubs/master",
+    "agora-extension-virtual-background" : "^1.1.0",
+    "agora-rtc-sdk-ng": "4.13.0",
     "ammo-debug-drawer": "github:infinitelee/ammo-debug-drawer",
     "ammo.js": "github:mozillareality/ammo.js#hubs/master",
     "animejs": "github:mozillareality/anime#hubs/master",

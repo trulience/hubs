@@ -59,7 +59,8 @@ import "./phoenix-adapter";
 import nextTick from "./utils/next-tick";
 import { addAnimationComponents } from "./utils/animation";
 import Cookies from "js-cookie";
-import { DialogAdapter, DIALOG_CONNECTION_ERROR_FATAL, DIALOG_CONNECTION_CONNECTED } from "./naf-dialog-adapter";
+//import { DialogAdapter, DIALOG_CONNECTION_ERROR_FATAL, DIALOG_CONNECTION_CONNECTED } from "./naf-dialog-adapter";
+import { DialogAdapter, DIALOG_CONNECTION_ERROR_FATAL, DIALOG_CONNECTION_CONNECTED } from "./agora-dialog-adapter";
 import "./change-hub";
 import { loadTruAvatar, bw} from "./tru"
 import "./components/scene-components";
