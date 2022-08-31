@@ -55,6 +55,7 @@ export default class SceneEntryManager {
 
   enterScene = async (enterInVR, muteOnEntry) => {
     console.log("Entering scene...");
+    window.APP.loadTruAvatar();
     document.getElementById("viewing-camera").removeAttribute("scene-preview-camera");
 
     if (isDebug && NAF.connection.adapter.session) {
@@ -232,27 +233,6 @@ export default class SceneEntryManager {
       return entity;
     };
 
-    this.scene.addEventListener("load_avatar", e => {
-    if (!this.hubChannel.can("spawn_and_move_media")) return;
-
-      const { entity, orientation } = addMedia(
-        "load_avatar",
-        "#static-media4",
-        //"#interactable-media",
-        null,
-        null,
-        false,
-        true
-      );
-
-      entity.setAttribute("ben", "rr");   
-      entity.setAttribute("position", {x: -10, y: 1.30, z: this.avatarPositions[this.avatarCount++] });	
-
-      entity.setAttribute("rotation", {x: 0, y: 90, z: 0});	
-
-      
-    });
-
     this.scene.addEventListener("add_media", e => {
       const contentOrigin = e.detail instanceof File ? ObjectContentOrigins.FILE : ObjectContentOrigins.URL;
       spawnMediaInfrontOfPlayer(e.detail, contentOrigin);
@@ -372,6 +352,26 @@ export default class SceneEntryManager {
       this.scene.emit("share_video_failed");
     };
 
+
+    this.scene.addEventListener("load_avatar", e => {
+      if (!this.hubChannel.can("spawn_and_move_media")) return;
+  
+        const { entity, orientation } = addMedia(
+          "load_avatar",
+          "#static-media4",
+          //"#interactable-media",
+          null,
+          null,
+          false,
+          true
+        );
+  
+        entity.setAttribute("ben", "rr");   
+        entity.setAttribute("position", {x: -10, y: 1.30, z: this.avatarPositions[this.avatarCount++] });	
+        entity.setAttribute("rotation", {x: 0, y: 90, z: 0});
+      });
+
+
     this.scene.addEventListener("action_share_camera", event => {
       if (isHandlingVideoShare) return;
       isHandlingVideoShare = true;
@@ -381,6 +381,12 @@ export default class SceneEntryManager {
         success: shareSuccess,
         error: shareError
       });
+      
+      
+
+      currentVideoShareEntity.setAttribute("position", {x: -10, y: 1.30, z: this.avatarPositions[this.avatarCount++] });	
+      currentVideoShareEntity.setAttribute("rotation", {x: 0, y: 90, z: 0});
+
     });
 
     this.scene.addEventListener("action_share_screen", () => {

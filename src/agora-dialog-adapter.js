@@ -153,9 +153,9 @@ export class DialogAdapter extends EventEmitter {
     } else { 
       // REMOTE USERS
       let user=this.getAgoraUser(clientId);
-      if (user && kind === "audio" &&  user.audioTrack._mediaStreamTrack) {
+      if (user && kind === "audio" &&  user.audioTrack && user.audioTrack._mediaStreamTrack) {
         track =  user.audioTrack._mediaStreamTrack;
-      } else if (user && kind === "video" && user.videoTrack._mediaStreamTrack) {
+      } else if (user && kind === "video" && user.videoTrack && user.videoTrack._mediaStreamTrack) {
         track = user.videoTrack._mediaStreamTrack;
       }
     }

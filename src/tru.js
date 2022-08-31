@@ -12,9 +12,10 @@ function getParameterByName(name, url = window.location.href) {
     return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
 
-function ready() {
+function tru_ready() {
+    console.log("tru ready");
 }
-
+  
 function tru_connect() {
     trl_connected = true;
     window.APP.entryManager.scene.emit("load_avatar");
@@ -25,7 +26,7 @@ function tru_disconnect() {
 }
 
 let authEventsCB = {
-    onReady: ready
+    onReady: tru_ready
 }
 
 let wsEventsCB = {
@@ -83,17 +84,6 @@ export function loadTruAvatar() {
         startCall();
     }
 }
-
-
-export function bw() {
-    alert(trl_connected);
-}
-
-
-
-
-
-
 
 
 !function(e) {

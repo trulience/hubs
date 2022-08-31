@@ -202,7 +202,6 @@ window.APP.RENDER_ORDER = {
 };
 
 window.APP.loadTruAvatar=loadTruAvatar;
-window.APP.bw=bw; 
 
 const store = window.APP.store;
 store.update({ preferences: { shouldPromptForRefresh: false } }); // Clear flag that prompts for refresh from preference screen

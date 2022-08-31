@@ -521,8 +521,6 @@ AFRAME.registerComponent("media-video", {
     this.program.bind();
 
     this.gl.uniform1i(this.uniformsBlock.get("sampler"), 0);
-    
-
     this.gl.activeTexture(this.gl.TEXTURE0);
     this.gl.bindTexture(this.gl.TEXTURE_2D, this.vTexture);
     this.gl.bindVertexArray(this.quad.vao)
@@ -559,7 +557,7 @@ AFRAME.registerComponent("media-video", {
       videoEl.addEventListener(
         "playing",
         function () {
-          console.log("canupdate");
+          //console.log("canupdate");
           this.canUpdate = true;
         },
         true
