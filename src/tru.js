@@ -41,10 +41,12 @@ let videoElements = {
 }
 
 var avatarId = getParameterByName("avatar_id") || '4765584368400223583'; //Default Avatar Id = 10 = ECHO_TEST
+var userId = getParameterByName("userId"); //Default Avatar Id = 10 = ECHO_TEST
 
 function pageOnloadHandler() {
     trl = Trulience.Builder()
         .setAvatarId(avatarId) // Setting as String as Long values are truncated in JavaScript
+        .setUserId(userId)
         .setLanguagePreference('en-US')
         .setUserName('Guest')
         .enableAvatar(true)  // false for chat only, true for chat and video avatar

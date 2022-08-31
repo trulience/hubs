@@ -35,6 +35,8 @@ export default class SceneEntryManager {
     this._entered = false;
     this.performConditionalSignIn = () => {};
     this.history = history;
+    this.avatarCount=0;
+    this.avatarPositions=[0.4,1.70,3.00,4.30,5.60];
   }
 
   init = () => {
@@ -235,8 +237,8 @@ export default class SceneEntryManager {
 
       const { entity, orientation } = addMedia(
         "load_avatar",
-        //"#static-media4",
-        "#interactable-media",
+        "#static-media4",
+        //"#interactable-media",
         null,
         null,
         false,
@@ -244,16 +246,10 @@ export default class SceneEntryManager {
       );
 
       entity.setAttribute("ben", "rr");   
-      //AFRAME.scenes[0].appendChild(entity);   
-      ///*
-      orientation.then(or => {
-        entity.setAttribute("offset-relative-to", {
-          target: "#avatar-pov-node",
-          offset,
-          orientation: or
-        });
-      });
-      //*/
+      entity.setAttribute("position", {x: -10, y: 1.30, z: this.avatarPositions[this.avatarCount++] });	
+
+      entity.setAttribute("rotation", {x: 0, y: 90, z: 0});	
+
       
     });
 

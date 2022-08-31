@@ -532,6 +532,7 @@ AFRAME.registerComponent("media-video", {
 
     if (this.canUpdate && this.timeupdate)
       updateTexture(this.gl,this.vTexture,this.videoEl);
+
     //requestAnimationFrame(this.renderLoop());
   },
 
@@ -818,7 +819,8 @@ AFRAME.registerComponent("media-video", {
   },
 
   tick: (() => {
-    console.log("??");
+    const targetPos = new THREE.Vector3();
+    const worldPos = new THREE.Vector3();
     return function() {
       if (!this.video) return;
 
@@ -862,6 +864,24 @@ AFRAME.registerComponent("media-video", {
           this.lastUpdate = now;
         }
       }
+
+      //console.log(Date.now()," in view ", this.el.object3D.visible);
+      const camera = this.el.sceneEl.camera;
+      const object3D = this.el.object3D;
+
+      
+    //  console.log(this.el.getAttribute("ben"));
+      if (camera) {
+        // Set the camera world position as the target.
+        targetPos.setFromMatrixPosition(camera.matrixWorld);
+        //object3D.lookAt(targetPos);
+        object3D.matrixNeedsUpdate = true;
+      }
+
+
+      this.renderLoop();
+      //renderLoop();
+
     };
   })(),
 
