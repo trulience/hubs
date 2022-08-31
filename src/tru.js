@@ -42,7 +42,7 @@ let videoElements = {
 }
 
 var avatarId = getParameterByName("avatar_id") || '4765584368400223583'; //Default Avatar Id = 10 = ECHO_TEST
-var userId = getParameterByName("userId"); //Default Avatar Id = 10 = ECHO_TEST
+var userId = getParameterByName("userId")  || '777';  //Default Avatar Id = 10 = ECHO_TEST
 
 function pageOnloadHandler() {
     trl = Trulience.Builder()
