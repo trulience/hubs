@@ -95,7 +95,7 @@ AFRAME.registerComponent("media-video", {
     this.gl = this.canvas.getContext("webgl2");
     this.uniformsBlock=new Map();
     this.program;
-    this.setupCustomWGL();
+    //this.setupCustomWGL();
 
     this.audioSystem = this.el.sceneEl.systems["hubs-systems"].audioSystem;
 
@@ -540,7 +540,7 @@ AFRAME.registerComponent("media-video", {
     const url = this.data.src;
     const contentType = this.data.contentType;
     let pollTimeout;
-    this.renderLoop();
+    //this.renderLoop();
     return new Promise(async (resolve, reject) => {
       if (this._audioSyncInterval) {
         clearInterval(this._audioSyncInterval);
@@ -879,7 +879,7 @@ AFRAME.registerComponent("media-video", {
       }
 
 
-      this.renderLoop();
+      //this.renderLoop();
       //renderLoop();
 
     };
