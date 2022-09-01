@@ -2,8 +2,6 @@ import AgoraRTC  from 'agora-rtc-sdk-ng';
 import VirtualBackgroundExtension from 'agora-extension-virtual-background';
 import { debug as newDebug } from "debug";
 import EventEmitter from "eventemitter3";
-//import * as agorawasm from "agora-extension-virtual-background/wasms/agora-wasm.wasm";
-//import  agorawasm from "agora-extension-virtual-background/wasms/agora-wasm.wasm";
 
 
 import { element } from "prop-types";
@@ -101,7 +99,7 @@ export class DialogAdapter extends EventEmitter {
   async _joinRoom() {
     let uid= await this._agora_client.join(this.appId, this._roomId, this.token, this._clientId);
     console.warn("_joinRoom");
-    console.warn(_roomId);
+    console.warn(this._roomId);
     await this.setLocalMediaStream(this._localMediaStream);
   }
 
@@ -197,29 +195,16 @@ export class DialogAdapter extends EventEmitter {
           this.emit("mic-state-changed", { enabled: true });
           await this._agora_client.publish( this.localTracks.audioTrack);
         } else if (track.kind === "video") {
+
           this.localTracks.videoTrack=await AgoraRTC.createCustomVideoTrack({
-            mediaStreamTrack: stream.getVideoTracks()[0]
+            mediaStreamTrack: stream.getVideoTracks()[0], 
+            encoderConfig: { bitrateMin: 150, bitrateMax: 600 }
           });
 
-
-          /*
-          const imgElement = document.createElement('img');
-          imgElement.onload = async () => {
-            if (!this.virtualBackgroundInstance) {
-              console.log("SEG INIT ", this.localTracks.videoTrack);
-              this.virtualBackgroundInstance = await SegPlugin.inject(this.localTracks.videoTrack, "https://vr-demo.agora.io/assets/wasms0").catch(console.error);
-              console.log("SEG INITED");
-            }
-            this.virtualBackgroundInstance.setOptions({ enable: true, background: imgElement });
-          };
-          imgElement.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAADCAIAAAA7ljmRAAAAD0lEQVR4XmNg+M+AQDg5AOk9C/VkomzYAAAAAElFTkSuQmCC';
-          */
-
+          // 
           this.extension = new VirtualBackgroundExtension();
           AgoraRTC.registerExtensions([this.extension]);
-          this.processor = this.extension.createProcessor();
-          //await this.processor.init("https://vr-demo.agora.io/assets/wasms");
-          //await this.processor.init(agorawasm);     
+          this.processor = this.extension.createProcessor(); 
           await this.processor.init("agora-extension-virtual-background/wasms/agora-wasm.wasm");     
           
           this.localTracks.videoTrack.pipe(this.processor).pipe(this.localTracks.videoTrack.processorDestination);
