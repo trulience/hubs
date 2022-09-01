@@ -100,6 +100,8 @@ export class DialogAdapter extends EventEmitter {
   // private
   async _joinRoom() {
     let uid= await this._agora_client.join(this.appId, this._roomId, this.token, this._clientId);
+    console.warn("_joinRoom");
+    console.warn(_roomId);
     await this.setLocalMediaStream(this._localMediaStream);
   }
 
