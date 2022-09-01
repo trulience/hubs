@@ -358,7 +358,6 @@ export default class MediaDevicesManager extends EventEmitter {
             width: isIOS ? { max: 1280 } : { max: 1280, ideal: 720 },
             frameRate: 30
           }
-          //TODO: Capture audio from camera?
         });
       }
 

@@ -11,6 +11,8 @@ const isDebug = qsTruthy("debug");
 const qs = new URLSearchParams(location.search);
 
 import { addMedia } from "./utils/media-utils";
+import {getParameterByName } from "./utils/media-url-utils";
+
 import {
   isIn2DInterstitial,
   handleExitTo2DInterstitial,
@@ -35,8 +37,13 @@ export default class SceneEntryManager {
     this._entered = false;
     this.performConditionalSignIn = () => {};
     this.history = history;
-    this.avatarCount=0;
-    this.avatarPositions=[0.4,1.70,3.00,4.30,5.60];
+    //this.avatarCount=0;
+    //this.avatarPositions=[0.4,1.70,3.00,4.30,5.60];
+    this.userSeats=[{x: -10, y: 1.30, z: 1.7 },{x: -10, y: 1.30, z: 3.0 },{x: -10, y: 1.30, z: 5.6 }];
+    this.userRotation={x: 0, y: 90, z: 0};
+
+    this.avatarPosition={x: -10, y: 1.30, z: 0.4 };
+    this.avatarRotation={x: 0, y: 90, z: 0};
   }
 
   init = () => {
@@ -55,7 +62,13 @@ export default class SceneEntryManager {
 
   enterScene = async (enterInVR, muteOnEntry) => {
     console.log("Entering scene...");
-    window.APP.loadTruAvatar();
+    
+    
+    // if avatarid in url
+    if (getParameterByName("avatar_id")) {
+      window.APP.loadTruAvatar();
+    }
+
     document.getElementById("viewing-camera").removeAttribute("scene-preview-camera");
 
     if (isDebug && NAF.connection.adapter.session) {
@@ -216,12 +229,15 @@ export default class SceneEntryManager {
       const { entity, orientation } = addMedia(
         src,
         "#interactable-media",
+        //"#static-media4", 
         contentOrigin,
         null,
         !(src instanceof MediaStream),
         true
       );
 
+      // BEBUG
+      /*8
       orientation.then(or => {
         entity.setAttribute("offset-relative-to", {
           target: "#avatar-pov-node",
@@ -229,7 +245,7 @@ export default class SceneEntryManager {
           orientation: or
         });
       });
-
+    */
       return entity;
     };
 
@@ -339,6 +355,19 @@ export default class SceneEntryManager {
             "emit-scene-event-on-remove",
             `event:${MediaDevicesEvents.VIDEO_SHARE_ENDED}`
           );
+            // BEBUG
+          // if param for seat then move to that position
+          // set chromakey
+          if (!isDisplayMedia) {
+            currentVideoShareEntity.setAttribute("chromakey", "green");   
+            if (getParameterByName("seat")) {
+              let seat=parseInt(getParameterByName("seat"));   
+              currentVideoShareEntity.setAttribute("position", this.userSeats[seat-1]);	
+              currentVideoShareEntity.setAttribute("rotation", this.userRotation);  
+              currentVideoShareEntity.setAttribute("scale", {x: 1.3, y: 1.3, z: 1.3});	        
+            }
+          }
+          
         }
 
         this.scene.emit("share_video_enabled", { source: isDisplayMedia ? MediaDevices.SCREEN : MediaDevices.CAMERA });
@@ -354,8 +383,7 @@ export default class SceneEntryManager {
 
 
     this.scene.addEventListener("load_avatar", e => {
-      if (!this.hubChannel.can("spawn_and_move_media")) return;
-  
+      if (!this.hubChannel.can("spawn_and_move_media")) return;  
         const { entity, orientation } = addMedia(
           "load_avatar",
           "#static-media4",
@@ -365,12 +393,11 @@ export default class SceneEntryManager {
           false,
           true
         );
-  
-        entity.setAttribute("ben", "rr");   
-        entity.setAttribute("position", {x: -10, y: 1.30, z: this.avatarPositions[this.avatarCount++] });	
-        entity.setAttribute("rotation", {x: 0, y: 90, z: 0});
-      });
 
+        entity.setAttribute("chromakey", "blue");   
+        entity.setAttribute("position", this.avatarPosition);	
+        entity.setAttribute("rotation", this.avatarRotation);
+      });
 
     this.scene.addEventListener("action_share_camera", event => {
       if (isHandlingVideoShare) return;
@@ -380,13 +407,15 @@ export default class SceneEntryManager {
         target: event.detail?.target,
         success: shareSuccess,
         error: shareError
-      });
+      });      
       
-      
-
+        
+      /*
+      currentVideoShareEntity.setAttribute("ben2", "rr7");   
       currentVideoShareEntity.setAttribute("position", {x: -10, y: 1.30, z: this.avatarPositions[this.avatarCount++] });	
-      currentVideoShareEntity.setAttribute("rotation", {x: 0, y: 90, z: 0});
-
+      currentVideoShareEntity.setAttribute("rotation", {x: 0, y: 90, z: 0});  
+      currentVideoShareEntity.setAttribute("scale", {x: 1.3, y: 1.3, z: 1.3});	            
+      */
     });
 
     this.scene.addEventListener("action_share_screen", () => {

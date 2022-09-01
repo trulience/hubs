@@ -24,7 +24,8 @@ import { isIOS as detectIOS } from "../utils/is-mobile";
 
 import qsTruthy from "../utils/qs_truthy";
 import GLProgram from "./wgl/GLProgram";
-import { createTexture, FSQuadProgram, getFullscreenQuad, TJSFrgProgramMod, updateTexture } from "./wgl/GLUtils";
+//import { createTexture, FSQuadProgram, getFullscreenQuad, TJSFrgProgramMod, updateTexture } from "./wgl/GLUtils";
+import { TJSFrgProgramMod, TJSFrgProgramModBlue } from "./wgl/GLUtils";
 
 const ONCE_TRUE = { once: true };
 const TYPE_IMG_PNG = { type: "image/png" };
@@ -462,10 +463,21 @@ AFRAME.registerComponent("media-video", {
       const material = new THREE.MeshBasicMaterial();
       material.toneMapped = false;
 
-      material.onBeforeCompile=(shader)=>{
-
-          shader.fragmentShader=TJSFrgProgramMod;
-      };
+      var chromakey = this.el.getAttribute("chromakey");
+      if (!chromakey && this.data && this.data.contentType && this.data.contentType=="video/vnd.hubs-webrtc") {
+        chromakey="green";
+      }
+      if (chromakey) {
+        if (chromakey == 'blue') {
+          material.onBeforeCompile = (shader) => {
+            shader.fragmentShader = TJSFrgProgramModBlue;
+          };
+        } else if (chromakey == 'green') {
+          material.onBeforeCompile = (shader) => {
+            shader.fragmentShader = TJSFrgProgramMod;
+          };
+        }
+      }
 
       let geometry;
 
@@ -516,7 +528,7 @@ AFRAME.registerComponent("media-video", {
       }
 
       let resolved = false;
-      const failLoad = function(e) {
+      const failLoad = function (e) {
         if (resolved) return;
         resolved = true;
         clearTimeout(pollTimeout);
@@ -539,7 +551,7 @@ AFRAME.registerComponent("media-video", {
         },
         true
       );
-      
+
 
       let texture, audioEl, isReady;
       if (contentType.startsWith("audio/")) {
@@ -579,10 +591,10 @@ AFRAME.registerComponent("media-video", {
       }
 
       // Set src on video to begin loading.
-      if (url.indexOf("load_avatar")>-1 ){      
+      if (url.indexOf("load_avatar") > -1) {
         videoEl.srcObject = document.getElementById("wall-avatar").srcObject; // = new MediaStream(stream.getVideoTracks());
       }
-       else if (url.startsWith("hubs://")) {
+      else if (url.startsWith("hubs://")) {
         const streamClientId = url.substring(7).split("/")[1]; // /clients/<client id>/video is only URL for now
         const stream = await APP.dialog.getMediaStream(streamClientId, "video");
         // We subscribe to video stream notifications for this peer to update the video element
@@ -604,10 +616,10 @@ AFRAME.registerComponent("media-video", {
         APP.dialog.on("stream_updated", this._onStreamUpdated, this);
         videoEl.srcObject = new MediaStream(stream.getVideoTracks());
         // If hls.js is supported we always use it as it gives us better events
-      } 
+      }
       else if (contentType.startsWith("application/dash")) {
         const dashPlayer = MediaPlayer().create();
-        dashPlayer.extend("RequestModifier", function() {
+        dashPlayer.extend("RequestModifier", function () {
           return { modifyRequestHeader: xhr => xhr, modifyRequestURL: proxiedUrlFor };
         });
         dashPlayer.on(MediaPlayer.events.ERROR, failLoad);
@@ -657,7 +669,7 @@ AFRAME.registerComponent("media-video", {
             hls.loadSource(url);
             hls.attachMedia(videoEl);
 
-            hls.on(HLS.Events.ERROR, function(event, data) {
+            hls.on(HLS.Events.ERROR, function (event, data) {
               if (data.fatal) {
                 switch (data.type) {
                   case HLS.ErrorTypes.NETWORK_ERROR:
@@ -789,7 +801,7 @@ AFRAME.registerComponent("media-video", {
   tick: (() => {
     const targetPos = new THREE.Vector3();
     const worldPos = new THREE.Vector3();
-    return function() {
+    return function () {
       if (!this.video) return;
 
       const userinput = this.el.sceneEl.systems.userinput;
@@ -837,8 +849,8 @@ AFRAME.registerComponent("media-video", {
       const camera = this.el.sceneEl.camera;
       const object3D = this.el.object3D;
 
-      
-    //  console.log(this.el.getAttribute("ben"));
+
+      //  console.log(this.el.getAttribute("ben"));
       if (camera) {
         // Set the camera world position as the target.
         targetPos.setFromMatrixPosition(camera.matrixWorld);

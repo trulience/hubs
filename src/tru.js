@@ -1,16 +1,9 @@
 
+import {getParameterByName } from "./utils/media-url-utils";
 
 let trl = null;
 let trl_connected = false;
 
-function getParameterByName(name, url = window.location.href) {
-    name = name.replace(/[\[\]]/g, '\\$&');
-    var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
-        results = regex.exec(url);
-    if (!results) return null;
-    if (!results[2]) return '';
-    return decodeURIComponent(results[2].replace(/\+/g, ' '));
-}
 
 function tru_ready() {
     console.log("tru ready");
@@ -42,9 +35,11 @@ let videoElements = {
 }
 
 var avatarId = getParameterByName("avatar_id") || '4765584368400223583'; //Default Avatar Id = 10 = ECHO_TEST
-var userId = getParameterByName("userId")  || '777';  //Default Avatar Id = 10 = ECHO_TEST
+var userId = getParameterByName("user_id")  || '777';  //Default Avatar Id = 10 = ECHO_TEST
 
 function pageOnloadHandler() {
+    if (!avatarId)
+        return;
     trl = Trulience.Builder()
         .setAvatarId(avatarId) // Setting as String as Long values are truncated in JavaScript
         .setUserId(userId)
