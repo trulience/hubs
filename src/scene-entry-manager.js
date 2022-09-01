@@ -237,15 +237,16 @@ export default class SceneEntryManager {
       );
 
       // BEBUG
-      /*8
-      orientation.then(or => {
-        entity.setAttribute("offset-relative-to", {
-          target: "#avatar-pov-node",
-          offset,
-          orientation: or
+
+      if (!getParameterByName("seat")) {
+        orientation.then(or => {
+          entity.setAttribute("offset-relative-to", {
+            target: "#avatar-pov-node",
+            offset,
+            orientation: or
+          });
         });
-      });
-    */
+      }
       return entity;
     };
 

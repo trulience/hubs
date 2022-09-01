@@ -201,15 +201,16 @@ export class DialogAdapter extends EventEmitter {
             encoderConfig: { bitrateMin: 150, bitrateMax: 600 }
           });
 
-          // 
-          this.extension = new VirtualBackgroundExtension();
-          AgoraRTC.registerExtensions([this.extension]);
-          this.processor = this.extension.createProcessor(); 
-          await this.processor.init("agora-extension-virtual-background/wasms/agora-wasm.wasm");     
-          
-          this.localTracks.videoTrack.pipe(this.processor).pipe(this.localTracks.videoTrack.processorDestination);
-          await this.processor.setOptions({ type: 'color', color:"#00ff00"});
-          await this.processor.enable();
+          const isMobile = AFRAME.utils.device.isMobile();
+          if (!isMobile) {
+            this.extension = new VirtualBackgroundExtension();
+            AgoraRTC.registerExtensions([this.extension]);
+            this.processor = this.extension.createProcessor(); 
+            await this.processor.init("agora-extension-virtual-background/wasms/agora-wasm.wasm");                 
+            this.localTracks.videoTrack.pipe(this.processor).pipe(this.localTracks.videoTrack.processorDestination);
+            await this.processor.setOptions({ type: 'color', color:"#00ff00"});
+            await this.processor.enable();
+          }
           await this._agora_client.publish( this.localTracks.videoTrack);
         }
         this.resolvePendingMediaRequestForTrack(this._clientId, track);
