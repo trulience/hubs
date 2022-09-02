@@ -34,17 +34,20 @@ let videoElements = {
     remoteVideo: 'wall-avatar',
 }
 
-var avatarId = getParameterByName("avatar_id") || '4765584368400223583'; //Default Avatar Id = 10 = ECHO_TEST
-var userId = getParameterByName("user_id")  || '777';  //Default Avatar Id = 10 = ECHO_TEST
+var avatarId = getParameterByName("tru_avatar_id") || null; //Default Avatar Id = 10 = ECHO_TEST
+var userId = getParameterByName("tru_user_id")  ||  null;  //Default Avatar Id = 10 = ECHO_TEST
+var vps = getParameterByName("tru_vps")  ||  null;   //Default Avatar Id = 10 = ECHO_TEST
 
 function pageOnloadHandler() {
-    if (!avatarId)
+    if (avatarId===null)
         return;
+
     trl = Trulience.Builder()
         .setAvatarId(avatarId) // Setting as String as Long values are truncated in JavaScript
         .setUserId(userId)
         .setLanguagePreference('en-US')
         .setUserName('Guest')
+        .assignVPS(vps)
         .enableAvatar(true)  // false for chat only, true for chat and video avatar
         .setAuthCallbacks(authEventsCB)
         .setWebSocketCallbacks(wsEventsCB)

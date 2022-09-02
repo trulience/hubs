@@ -46,7 +46,11 @@ export function getParameterByName(name, url = window.location.href) {
       results = regex.exec(url);
   if (!results) return null;
   if (!results[2]) return '';
-  return decodeURIComponent(results[2].replace(/\+/g, ' '));
+  var ret= decodeURIComponent(results[2].replace(/\+/g, ' '));
+  if (ret && ret.length>0)
+    return ret;
+  else
+    return null;
 }
 
 export const scaledThumbnailUrlFor = (url, width, height) => {

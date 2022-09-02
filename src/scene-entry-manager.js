@@ -63,9 +63,8 @@ export default class SceneEntryManager {
   enterScene = async (enterInVR, muteOnEntry) => {
     console.log("Entering scene...");
     
-    
     // if avatarid in url
-    if (getParameterByName("avatar_id")) {
+    if (getParameterByName("tru_avatar_id")!==null) {
       window.APP.loadTruAvatar();
     }
 
