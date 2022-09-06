@@ -62,7 +62,7 @@ import Cookies from "js-cookie";
 //import { DialogAdapter, DIALOG_CONNECTION_ERROR_FATAL, DIALOG_CONNECTION_CONNECTED } from "./naf-dialog-adapter";
 import { DialogAdapter, DIALOG_CONNECTION_ERROR_FATAL, DIALOG_CONNECTION_CONNECTED } from "./agora-dialog-adapter";
 import "./change-hub";
-import { loadTruAvatar, bw} from "./tru"
+import { loadTruAvatar} from "./tru"
 import "./components/scene-components";
 import "./components/mute-mic";
 import "./components/bone-mute-state-indicator";

@@ -33,7 +33,7 @@ const isMobileVR = AFRAME.utils.device.isMobile();
 // Map<String, Promise<Object>
 const resolveUrlCache = new Map();
 export const getDefaultResolveQuality = (is360 = false) => {
-  const useLowerQuality = isMobile || isMobileVR;
+  const useLowerQuality = false; //isMobile || isMobileVR;
   return !is360 ? (useLowerQuality ? "low" : "high") : useLowerQuality ? "low_360" : "high_360";
 };
 

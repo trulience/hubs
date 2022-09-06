@@ -4,7 +4,6 @@ import {getParameterByName } from "./utils/media-url-utils";
 let trl = null;
 let trl_connected = false;
 
-
 function tru_ready() {
     console.log("tru ready");
 }
@@ -19,7 +18,7 @@ function tru_disconnect() {
 }
 
 let authEventsCB = {
-    onReady: tru_ready
+ //   onReady: tru_ready
 }
 
 let wsEventsCB = {
@@ -31,7 +30,7 @@ let mediaEventsCB = {
 }
 
 let videoElements = {
-    remoteVideo: 'wall-avatar',
+    remoteVideo: '',
 }
 
 var avatarId = getParameterByName("tru_avatar_id") || null; //Default Avatar Id = 10 = ECHO_TEST
@@ -39,8 +38,10 @@ var userId = getParameterByName("tru_user_id")  ||  null;  //Default Avatar Id =
 var vps = getParameterByName("tru_vps")  ||  null;   //Default Avatar Id = 10 = ECHO_TEST
 
 function pageOnloadHandler() {
-    if (avatarId===null)
-        return;
+    if (avatarId===null) {
+        avatarId="5681753935234156532";
+    }
+      //  return;
 
     trl = Trulience.Builder()
         .setAvatarId(avatarId) // Setting as String as Long values are truncated in JavaScript
@@ -57,10 +58,11 @@ function pageOnloadHandler() {
         .registerVideoElements(videoElements)
         .build();
     trl.authenticate();
+    window.APP.trl=trl;
 };
 
-
-function startCall() {
+export function startCall() {
+    pageOnloadHandler();
     trl.connectGateway();
 }
 
@@ -68,7 +70,7 @@ function endCall(reason) {
     trl.disconnectGateway(reason);
 }
 
-window.onload = () => pageOnloadHandler(false);
+//window.onload = () => pageOnloadHandler();
 
 window.onunload = function () {
     trl.disconnectGateway();
@@ -3143,8 +3145,8 @@ export function loadTruAvatar() {
                         console.info("iOS reattachTrlVid "),
                         t.reattachTrlVid()
                     }
-                    ), 1e3),
-                    this.remoteVideo.play()
+                    ), 1e3)
+                    //,this.remoteVideo.play()
                 }
             }
         }, {
@@ -3241,45 +3243,46 @@ export function loadTruAvatar() {
                 void 0 !== e.streams && 0 !== e.streams.length) {
                     var t = e.streams[0];
                     this.rvstream = t;
+                    window.APP.rvstresm = t;
                     var n = window.navigator.userAgent;
                     n.match(/iPad/i) || n.match(/iPhone/i) ? (console.log("navigator.userAgent", navigator.userAgent, navigator.userAgent.indexOf("iPhone OS 15"), e.track.kind),
                     (navigator.userAgent.indexOf("iPhone OS 15_0") > -1 || navigator.userAgent.indexOf("iPhone OS 15_1") > -1 || navigator.userAgent.indexOf("iPhone OS 15_2") > -1 || navigator.userAgent.indexOf("iPhone OS 15_3") > -1) && "audio" === e.track.kind && this.attachAudioTrack(e.track),
-                    "video" === e.track.kind && (console.log("BW SET that.remoteVideo.srcObject"),
-                    window.remoteVideo = this.remoteVideo,
-                    window.rvstresm = this.rvstream,
-                    this.remoteVideo.srcObject = this.rvstream)) : "video" === e.track.kind && (this.remoteVideo.srcObject = this.rvstream),
-                    console.info("WebRTC onRemoteTrackAdded attached ".concat(t.id, " to ").concat(this.remoteVideo.id, " streams") + e.streams.length)
+                    "video" === e.track.kind && (console.log("BW SET that.remoteVideo.srcObject"),                
+                    window.APP.rvstresm = this.rvstream)) : "video" === e.track.kind && ( window.APP.rvstresm = this.rvstream)
                 } else
                     console.warn("WebRTC onRemoteTrackAdded: no streams")
             }
         }, {
             key: "reattachTrlVid",
             value: function() {
-                this.remoteVideo.srcObject = null,
-                this.remoteVideo.srcObject = this.rvstream,
-                this.remoteVideo.play()
+                //this.remoteVideo.srcObject = null,
+                window.APP.rvstresm = this.rvstream
+                //this.remoteVideo.play()
             }
         }, {
             key: "dettachTrlVid",
             value: function() {
-                this.remoteVideo.srcObject = null
+                //this.remoteVideo.srcObject = null
             }
         }, {
             key: "attachTrlVid",
             value: function() {
-                this.remoteVideo.srcObject = this.rvstream,
+               // this.remoteVideo.srcObject = this.rvstream,
+               window.APP.rvstresm = this.rvstream,
                 console.info(" attachTrlVid ")
             }
         }, {
             key: "attachTrlVid2",
             value: function() {
-                this.remoteVideo.srcObject = this.localStream,
+                //this.remoteVideo.srcObject = this.localStream,
+                window.APP.rvstresm = this.rvstream,
                 console.info(" attachTrlVid ")
             }
         }, {
             key: "attachTrlVid3",
             value: function() {
-                this.remoteVideo.srcObject = this.localStream[0],
+               // this.remoteVideo.srcObject = this.localStream[0],
+               window.APP.rvstresm = this.rvstream,
                 console.info(" attachTrlVid ")
             }
         }, {
@@ -3903,7 +3906,7 @@ export function loadTruAvatar() {
             key: "connectMedia",
             value: function(e, t) {
                 !1 !== this._avatarEnabled ? (!e && this._videoElements && this._videoElements.previewVideo && (e = document.getElementById(this._videoElements.previewVideo)),
-                !t && this._videoElements && (t = document.getElementById(this._videoElements.remoteVideo)),
+                !t && this._videoElements && (t = null),
                 this._rtc ? console.log("connectMedia => _rtc not null, so return") : (console.log("connectMedia => Instantiate RTC()"),
                 this._rtc = new D,
                 this._rtc.preview = e,
@@ -3915,8 +3918,8 @@ export function loadTruAvatar() {
             key: "connectRTCDirectly",
             value: function(e, t) {
                 this._directRTCCall = !0,
-                !e && this._videoElements && this._videoElements.previewVideo && (e = document.getElementById(this._videoElements.previewVideo)),
-                !t && this._videoElements && (t = document.getElementById(this._videoElements.remoteVideo)),
+                !e && this._videoElements && this._videoElements.previewVideo && (e = null),
+                !t && this._videoElements && (t = null),
                 this._rtc ? console.log("connectRTCDirectly => _rtc not null, so return") : (console.log("connectRTCDirectly => Instantiate RTC()"),
                 this._rtc = new D,
                 this._rtc.preview = e,

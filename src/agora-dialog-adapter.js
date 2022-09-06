@@ -2,10 +2,8 @@ import AgoraRTC  from 'agora-rtc-sdk-ng';
 import VirtualBackgroundExtension from 'agora-extension-virtual-background';
 import { debug as newDebug } from "debug";
 import EventEmitter from "eventemitter3";
+import {getParameterByName } from "./utils/media-url-utils";
 
-
-import { element } from "prop-types";
-import { MediaDevices } from "./utils/media-devices-utils";
 
 const debug = newDebug("agora-dialog-adapter:debug");
 const error = newDebug("agora-dialog-adapter:error");
@@ -192,26 +190,28 @@ export class DialogAdapter extends EventEmitter {
           this.localTracks.audioTrack=await AgoraRTC.createCustomAudioTrack({
             mediaStreamTrack: stream.getAudioTracks()[0]
           });
-          this.emit("mic-state-changed", { enabled: true });
-          await this._agora_client.publish( this.localTracks.audioTrack);
-        } else if (track.kind === "video") {
-
-          this.localTracks.videoTrack=await AgoraRTC.createCustomVideoTrack({
-            mediaStreamTrack: stream.getVideoTracks()[0], 
-            encoderConfig: { bitrateMin: 150, bitrateMax: 600 }
-          });
-
-          const isMobile = AFRAME.utils.device.isMobile();
-          if (!isMobile) {
-            this.extension = new VirtualBackgroundExtension();
-            AgoraRTC.registerExtensions([this.extension]);
-            this.processor = this.extension.createProcessor(); 
-            await this.processor.init("agora-extension-virtual-background/wasms/agora-wasm.wasm");                 
-            this.localTracks.videoTrack.pipe(this.processor).pipe(this.localTracks.videoTrack.processorDestination);
-            await this.processor.setOptions({ type: 'color', color:"#00ff00"});
-            await this.processor.enable();
+          if (this.isMicEnabled()) {
+            this.emit("mic-state-changed", { enabled: true });
+            await this._agora_client.publish( this.localTracks.audioTrack);
           }
-          await this._agora_client.publish( this.localTracks.videoTrack);
+        } else if (track.kind === "video") {
+          this.localTracks.videoTrack=await AgoraRTC.createCustomVideoTrack({
+            mediaStreamTrack: stream.getVideoTracks()[0], bitrateMin: 300, bitrateMax: 900, optimizationMode: 'detail'
+          });
+          if (this.localTracks &&this.localTracks.videoTrack) {
+            const isMobile = AFRAME.utils.device.isMobile();
+            if (!isMobile && getParameterByName("seat")!=null) {
+              // enable auto green screen virtual background
+              this.extension = new VirtualBackgroundExtension();
+              AgoraRTC.registerExtensions([this.extension]);
+              this.processor = this.extension.createProcessor(); 
+              await this.processor.init("agora-extension-virtual-background/wasms/agora-wasm.wasm");                 
+              this.localTracks.videoTrack.pipe(this.processor).pipe(this.localTracks.videoTrack.processorDestination);
+              await this.processor.setOptions({ type: 'color', color:"#00ff00"});
+              await this.processor.enable();
+            }
+            await this._agora_client.publish( this.localTracks.videoTrack);
+          }
         }
         this.resolvePendingMediaRequestForTrack(this._clientId, track);
       })
@@ -232,7 +232,7 @@ export class DialogAdapter extends EventEmitter {
   }
 
   toggleMicrophone() {
-    if (this.isMicEnabled) {
+    if (this.isMicEnabled()) {
       this.enableMicrophone(false);
     } else {
       this.enableMicrophone(true);
@@ -242,10 +242,11 @@ export class DialogAdapter extends EventEmitter {
   enableMicrophone(enabled) {
     if (!this.localTracks || !this.localTracks.audioTrack) {
       console.error("Tried to toggle mic but there's no mic.");
-      return;
+      enabled=false;
+    } else {
+      this.localTracks.audioTrack.setEnabled(enabled);
     }
-    this.localTracks.audioTrack.setEnabled(enabled);
-    this.emit("mic-state-changed", { enabled: this.isMicEnabled() });
+    this.emit("mic-state-changed", { enabled: enabled });
   }
 
    isMicEnabled() {

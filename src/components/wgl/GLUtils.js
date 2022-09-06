@@ -146,7 +146,7 @@ export const FSQuadProgram = {
   `
 };
 
-export const TJSFrgProgramModBlue=`
+export const TJSFrgProgramModRed=`
 uniform vec3 diffuse;
 uniform float opacity;
 #ifndef FLAT_SHADED
@@ -197,10 +197,26 @@ void main() {
     diffuseColor.a *= material.transmissionAlpha + 0.1;
   #endif
   vec4 tColor = vec4( outgoingLight, diffuseColor.a );
-  float a = (length(tColor.rgb - vec3(0.01,0.01,0.99)) - 0.5) * 7.0;
+  //float a = (length(tColor.rgb - vec3(0.01,0.01,0.99)) - 0.5) * 7.0;
+  // yellow
+  //float a = (length(tColor.rgb - vec3(0.769,0.718,0.039)) - 0.5) * 7.0;
+  // light green
+  //float a = (length(tColor.rgb - vec3(0.7529,0.9607,0.7843)) - 0.5) * 7.0;
+  // green
+  //float a = (length(tColor.rgb - vec3(0.01,0.99,0.01)) - 0.5) * 7.0;
+  // green2
+  //float a = (length(tColor.rgb - vec3(0.01,0.486,0.098)) - 0.5) * 7.0;
+  //float a = (length(tColor.rgb - vec3(0.00,0.00,0.00)) - 0.5) * 7.0;
+  //float a = (length(tColor.rgb - vec3(0.0,0.0,0.0))) * 2.0;
+  
+  // cyan
+  //float a = (length(tColor.rgb - vec3(0.00,0.68235,0.7647058)) - 0.5) * 7.0;
+  // red 2650360787748866383
+  float a = (length(tColor.rgb - vec3(0.999,0.001,0.001)) - 0.5) * 7.0;
   gl_FragColor = tColor;
-  if(a<2.8)
+  if(a<0.10) {
     discard;
+  }
   #include <tonemapping_fragment>
   #include <encodings_fragment>
   #include <fog_fragment>

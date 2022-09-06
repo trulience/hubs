@@ -25,7 +25,7 @@ import { isIOS as detectIOS } from "../utils/is-mobile";
 import qsTruthy from "../utils/qs_truthy";
 import GLProgram from "./wgl/GLProgram";
 //import { createTexture, FSQuadProgram, getFullscreenQuad, TJSFrgProgramMod, updateTexture } from "./wgl/GLUtils";
-import { TJSFrgProgramMod, TJSFrgProgramModBlue } from "./wgl/GLUtils";
+import { TJSFrgProgramMod, TJSFrgProgramModRed } from "./wgl/GLUtils";
 
 const ONCE_TRUE = { once: true };
 const TYPE_IMG_PNG = { type: "image/png" };
@@ -468,9 +468,9 @@ AFRAME.registerComponent("media-video", {
         chromakey="green";
       }
       if (chromakey) {
-        if (chromakey == 'blue') {
+        if (chromakey == 'red') {
           material.onBeforeCompile = (shader) => {
-            shader.fragmentShader = TJSFrgProgramModBlue;
+            shader.fragmentShader = TJSFrgProgramModRed;
           };
         } else if (chromakey == 'green') {
           material.onBeforeCompile = (shader) => {
@@ -592,7 +592,7 @@ AFRAME.registerComponent("media-video", {
 
       // Set src on video to begin loading.
       if (url.indexOf("load_avatar") > -1) {
-        videoEl.srcObject = document.getElementById("wall-avatar").srcObject; // = new MediaStream(stream.getVideoTracks());
+        videoEl.srcObject = window.APP.rvstresm; //document.getElementById("wall-avatar").srcObject; // = new MediaStream(stream.getVideoTracks());
       }
       else if (url.startsWith("hubs://")) {
         const streamClientId = url.substring(7).split("/")[1]; // /clients/<client id>/video is only URL for now

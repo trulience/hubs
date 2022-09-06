@@ -39,10 +39,11 @@ export default class SceneEntryManager {
     this.history = history;
     //this.avatarCount=0;
     //this.avatarPositions=[0.4,1.70,3.00,4.30,5.60];
-    this.userSeats=[{x: -10, y: 1.30, z: 1.7 },{x: -10, y: 1.30, z: 3.0 },{x: -10, y: 1.30, z: 5.6 }];
+    this.userSeats=[{x: -10, y: 1.40, z: 1.7 },{x: -10, y: 1.40, z: 3.0 },{x: -10, y: 1.40, z: 4.3 },{x: -10, y: 1.40, z: 5.6 }];
     this.userRotation={x: 0, y: 90, z: 0};
+    this.userScale=1.4;
 
-    this.avatarPosition={x: -10, y: 1.30, z: 0.4 };
+    this.avatarPosition={x: -10, y: 1.40, z: 0.4 };
     this.avatarRotation={x: 0, y: 90, z: 0};
   }
 
@@ -63,6 +64,11 @@ export default class SceneEntryManager {
   enterScene = async (enterInVR, muteOnEntry) => {
     console.log("Entering scene...");
     
+    
+    if (getParameterByName("user_scale")!==null) {
+      this.userScale =parseFloat(getParameterByName("user_scale"));
+
+    }
     // if avatarid in url
     if (getParameterByName("tru_avatar_id")!==null) {
       window.APP.loadTruAvatar();
@@ -364,7 +370,7 @@ export default class SceneEntryManager {
               let seat=parseInt(getParameterByName("seat"));   
               currentVideoShareEntity.setAttribute("position", this.userSeats[seat-1]);	
               currentVideoShareEntity.setAttribute("rotation", this.userRotation);  
-              currentVideoShareEntity.setAttribute("scale", {x: 1.3, y: 1.3, z: 1.3});	        
+              currentVideoShareEntity.setAttribute("scale", {x: this.userScale, y: this.userScale, z: this.userScale});	        
             }
           }
           
@@ -394,9 +400,10 @@ export default class SceneEntryManager {
           true
         );
 
-        entity.setAttribute("chromakey", "blue");   
+        entity.setAttribute("chromakey", "red");   
         entity.setAttribute("position", this.avatarPosition);	
         entity.setAttribute("rotation", this.avatarRotation);
+        entity.setAttribute("scale", { x: this.userScale, y: this.userScale, z: this.userScale });
       });
 
     this.scene.addEventListener("action_share_camera", event => {
