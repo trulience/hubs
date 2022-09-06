@@ -355,9 +355,9 @@ export default class MediaDevicesManager extends EventEmitter {
       } else {
         newStream = await navigator.mediaDevices.getUserMedia({
           video: {
-            width: isIOS ? { max: 640 } : { max: 1280 , ideal: 1280 },
-            height: isIOS ? { max: 360 } : { max: 720, ideal: 720 },
-            frameRate: 30
+            width: isIOS ? { max: 640 } : { max: 640 , ideal: 640 },
+            height: isIOS ? { max: 360 } : { max: 360, ideal: 360 },
+            frameRate: isIOS ? { max: 20 } : { ideal: 20, max: 20 }
           }
         });
       }

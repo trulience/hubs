@@ -196,7 +196,7 @@ export class DialogAdapter extends EventEmitter {
           }
         } else if (track.kind === "video") {
           this.localTracks.videoTrack=await AgoraRTC.createCustomVideoTrack({
-            mediaStreamTrack: stream.getVideoTracks()[0], bitrateMin: 300, bitrateMax: 900, optimizationMode: 'detail'
+            mediaStreamTrack: stream.getVideoTracks()[0], bitrateMin: 600, bitrateMax: 900, optimizationMode: 'motion'
           });
           if (this.localTracks &&this.localTracks.videoTrack) {
             const isMobile = AFRAME.utils.device.isMobile();
