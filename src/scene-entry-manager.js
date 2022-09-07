@@ -11,7 +11,7 @@ const isDebug = qsTruthy("debug");
 const qs = new URLSearchParams(location.search);
 
 import { addMedia } from "./utils/media-utils";
-import {getParameterByName } from "./utils/media-url-utils";
+import {getParameterByName, getParameterByNameFloat } from "./utils/media-url-utils";
 
 import {
   isIn2DInterstitial,
@@ -37,13 +37,15 @@ export default class SceneEntryManager {
     this._entered = false;
     this.performConditionalSignIn = () => {};
     this.history = history;
-    //this.avatarCount=0;
-    //this.avatarPositions=[0.4,1.70,3.00,4.30,5.60];
-    this.userSeats=[{x: -10, y: 1.40, z: 1.7 },{x: -10, y: 1.40, z: 3.0 },{x: -10, y: 1.40, z: 4.3 },{x: -10, y: 1.40, z: 5.6 }];
-    this.userRotation={x: 0, y: 90, z: 0};
-    this.userScale=1.4;
 
-    this.avatarPosition={x: -10, y: 1.40, z: 0.4 };
+    this.userPosY=getParameterByNameFloat("userPosY", 1.4);
+    this.userScale=getParameterByNameFloat("user_scale", 1.4);
+    this.userSeats=[{x: -10, y: this.userPosY, z: 1.7 },{x: -10, y: this.userPosY, z: 3.0 },{x: -10, y: this.userPosY, z: 4.3 },{x: -10, y: this.userPosY, z: 5.6 }];
+    this.userRotation={x: 0, y: 90, z: 0};
+
+    this.avatarPosY=getParameterByNameFloat("avatarPosY", 1.4);
+    this.avatarScale=getParameterByNameFloat("avatar_scale", 1.4);    
+    this.avatarPosition={x: -10, y: this.avatarPosY, z: 0.4 };
     this.avatarRotation={x: 0, y: 90, z: 0};
   }
 
@@ -64,11 +66,7 @@ export default class SceneEntryManager {
   enterScene = async (enterInVR, muteOnEntry) => {
     console.log("Entering scene...");
     
-    
-    if (getParameterByName("user_scale")!==null) {
-      this.userScale =parseFloat(getParameterByName("user_scale"));
 
-    }
     // if avatarid in url
     if (getParameterByName("tru_avatar_id")!==null) {
       window.APP.loadTruAvatar();
@@ -403,7 +401,7 @@ export default class SceneEntryManager {
         entity.setAttribute("chromakey", "red");   
         entity.setAttribute("position", this.avatarPosition);	
         entity.setAttribute("rotation", this.avatarRotation);
-        entity.setAttribute("scale", { x: this.userScale, y: this.userScale, z: this.userScale });
+        entity.setAttribute("scale", { x: this.avatarScale, y: this.avatarScale, z: this.avatarScale });
       });
 
     this.scene.addEventListener("action_share_camera", event => {

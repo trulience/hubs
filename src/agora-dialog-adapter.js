@@ -2,7 +2,7 @@ import AgoraRTC  from 'agora-rtc-sdk-ng';
 import VirtualBackgroundExtension from 'agora-extension-virtual-background';
 import { debug as newDebug } from "debug";
 import EventEmitter from "eventemitter3";
-import {getParameterByName } from "./utils/media-url-utils";
+import {getParameterByName, getParameterByNameInt} from "./utils/media-url-utils";
 
 
 const debug = newDebug("agora-dialog-adapter:debug");
@@ -196,7 +196,7 @@ export class DialogAdapter extends EventEmitter {
           }
         } else if (track.kind === "video") {
           this.localTracks.videoTrack=await AgoraRTC.createCustomVideoTrack({
-            mediaStreamTrack: stream.getVideoTracks()[0], bitrateMin: 600, bitrateMax: 900, optimizationMode: 'motion'
+            mediaStreamTrack: stream.getVideoTracks()[0], bitrateMin: getParameterByNameInt("bitrateMin",600), bitrateMax: getParameterByNameInt("bitrateMax",1500) , optimizationMode: 'motion'
           });
           if (this.localTracks &&this.localTracks.videoTrack) {
             const isMobile = AFRAME.utils.device.isMobile();

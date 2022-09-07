@@ -1,13 +1,16 @@
 // On high-DPI displays, measures the median FPS over time and reduces the
 // pixelRatio if the FPS drops below a threshold.
 
-const LOW_FPS_THRESHOLD = 30;
-const HIGH_FPS_THRESHOLD = 48;
-const SKIP_SECONDS_AFTER_SCENE_VISIBLE = 30;
+//import {getParameterByNameInt } from "../utils/media-url-utils";
+import { getParameterByNameInt } from "../utils/media-url-utils";
+
+const LOW_FPS_THRESHOLD = getParameterByNameInt("LOW_FPS_THRESHOLD",20);
+const HIGH_FPS_THRESHOLD = getParameterByNameInt("HIGH_FPS_THRESHOLD",40);
+const SKIP_SECONDS_AFTER_SCENE_VISIBLE =  getParameterByNameInt("SKIP_SECONDS_AFTER_SCENE_VISIBLE",30);
 const MEASUREMENT_PERIOD_SECONDS = 5;
 const MIN_PIXEL_RATIO = 1;
 const CHANGE_RATE = 1;
-const NUM_TIMES_DECREASED_BEFORE_CHANGING_MAX_PIXEL_RATIO = 3;
+const NUM_TIMES_DECREASED_BEFORE_CHANGING_MAX_PIXEL_RATIO = 5;
 
 AFRAME.registerSystem("auto-pixel-ratio", {
   init() {

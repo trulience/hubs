@@ -53,6 +53,23 @@ export function getParameterByName(name, url = window.location.href) {
     return null;
 }
 
+export function getParameterByNameInt(name, def) {
+  var ret= getParameterByName(name);
+  if (ret && ret!==null && ret.length>0)
+    return parseInt(ret);
+  else
+    return def;
+}
+
+export function getParameterByNameFloat(name, def) {
+  var ret= getParameterByName(name);
+  if (ret && ret!==null && ret.length>0)
+    return parseFloat(ret);
+  else
+    return def;
+}
+
+
 export const scaledThumbnailUrlFor = (url, width, height) => {
   let extension = "";
   try {

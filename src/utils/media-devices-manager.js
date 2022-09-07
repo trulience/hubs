@@ -2,6 +2,7 @@ import { EventEmitter } from "eventemitter3";
 import { MediaDevicesEvents, PermissionStatus, MediaDevices, NO_DEVICE_ID } from "./media-devices-utils";
 import { detectOS, detect } from "detect-browser";
 import { isIOS as detectIOS } from "./is-mobile";
+import {getParameterByNameInt } from "./media-url-utils";
 
 const isMobile = AFRAME.utils.device.isMobile();
 const isIOS = detectIOS();
@@ -353,13 +354,15 @@ export default class MediaDevicesManager extends EventEmitter {
           }
         });
       } else {
-        newStream = await navigator.mediaDevices.getUserMedia({
+        let constraint={
           video: {
-            width: isIOS ? { max: 640 } : { max: 640 , ideal: 640 },
-            height: isIOS ? { max: 360 } : { max: 360, ideal: 360 },
-            frameRate: isIOS ? { max: 20 } : { ideal: 20, max: 20 }
+            width: isIOS ? { max: 640 } : { max: getParameterByNameInt("resw",1280), ideal: getParameterByNameInt("resw",1280)},
+            height: isIOS ? { max: 360 } : { max: getParameterByNameInt("resh",720), ideal: getParameterByNameInt("resh",720)},
+            frameRate: isIOS ? { max: 30 } : { ideal: getParameterByNameInt("fps",30), max: getParameterByNameInt("fps",30)}
           }
-        });
+        }
+        console.log(constraint);
+        newStream = await navigator.mediaDevices.getUserMedia(constraint);
       }
 
       const videoTracks = newStream ? newStream.getVideoTracks() : [];
