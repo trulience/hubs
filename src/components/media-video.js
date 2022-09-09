@@ -470,10 +470,20 @@ AFRAME.registerComponent("media-video", {
       if (chromakey) {
         if (chromakey == 'red') {
           material.onBeforeCompile = (shader) => {
+          shader.vertexShader=shader.vertexShader.replace(`#include <uv_vertex>`,
+          `#ifdef USE_UV
+            vUv = ( uvTransform * vec3( uv, 1 ) ).xy;
+            vUv.x = 1.0 -vUv.x;
+          #endif`);
             shader.fragmentShader = TJSFrgProgramModRed;
           };
         } else if (chromakey == 'green') {
           material.onBeforeCompile = (shader) => {
+          shader.vertexShader=shader.vertexShader.replace(`#include <uv_vertex>`,
+          `#ifdef USE_UV
+            vUv = ( uvTransform * vec3( uv, 1 ) ).xy;
+            vUv.x = 1.0 -vUv.x;
+          #endif`);
             shader.fragmentShader = TJSFrgProgramMod;
           };
         }
