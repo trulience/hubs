@@ -232,7 +232,7 @@ export default class SceneEntryManager {
       const { entity, orientation } = addMedia(
         src,
         //"#interactable-media",
-        "#interactable-agora-media",
+        getParameterByName("seat")===null ? "#interactable-media" : "#interactable-agora-media",
         //"#static-media4", 
         contentOrigin,
         null,
@@ -242,7 +242,7 @@ export default class SceneEntryManager {
 
       // BEBUG
 
-      if (!getParameterByName("seat")) {
+      if (getParameterByName("seat")===null) {
         orientation.then(or => {
           entity.setAttribute("offset-relative-to", {
             target: "#avatar-pov-node",
@@ -365,7 +365,7 @@ export default class SceneEntryManager {
           // set chromakey
           if (!isDisplayMedia) {
             currentVideoShareEntity.setAttribute("chromakey", "green");   
-            if (getParameterByName("seat")) {
+            if (getParameterByName("seat")!==null) {
               let seat=parseInt(getParameterByName("seat"));   
               currentVideoShareEntity.setAttribute("position", this.userSeats[seat-1]);	
               currentVideoShareEntity.setAttribute("rotation", this.userRotation);  
