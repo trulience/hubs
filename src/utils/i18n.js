@@ -5,10 +5,10 @@ import { AVAILABLE_LOCALES, FALLBACK_LOCALES } from "../assets/locales/locale_co
 const defaultLocaleData = {
   "app-name": "App",
   "editor-name": "Scene Editor",
-  "contact-email": "app@company.com",
-  "company-name": "Company",
+  "contact-email": "info@trulience.com",
+  "company-name": "Trulience",
   "share-hashtag": "#app",
-  "app-description": "Gather share and collaborate together in a virtual, private and safe space",
+  "app-description": "Trulience & Agora Metaverse Platform",
   "app-tagline": "Private social VR in your web browser"
 };
 

@@ -23,13 +23,18 @@ export class DialogAdapter extends EventEmitter {
     this._serverParams = {};
     this._consumerStats = {};
     this._agora_client = null;
-    this.appId = "20b7c51ff4c644ab80cf5a4e646b0537";
-    this.token = null;
+
+    // If your Agora appId has tokens enabled then you can set a tokenAPI URL below to request a token
+    // To quickly run an AWS Lambda token service see https://github.com/BenWeekes/agora-rtc-lambda
+    // set Agora appId here
+    this.appId = "20b7c51ff4c644ab80cf5a4e646b0537"; 
+    // set token server if tokens are enabled
+    this.tokenAPI = null; //"https://24volagzyvl2t3cziyxhiy7kpy0tdzke.lambda-url.us-east-1.on.aws/?channel="; 
     this.virtualBackgroundInstance = null;
     this.extension = null;
     this.processor = null;
-
     this.userid = null;
+
     this.localTracks = {
       videoTrack: null,
       audioTrack: null
@@ -43,10 +48,7 @@ export class DialogAdapter extends EventEmitter {
     joinToken,
     serverParams,
     scene,
-    clientId,
-    forceTcp,
-    forceTurn,
-    iceTransportPolicy
+    clientId
   }) {
     this._serverUrl = serverUrl;
     this._roomId = roomId;
@@ -54,7 +56,6 @@ export class DialogAdapter extends EventEmitter {
     this._serverParams = serverParams;
     this._clientId = clientId;
     this.scene = scene;
-    //AgoraRTC.loadModule(SegPlugin, {});
     this._agora_client = AgoraRTC.createClient({ codec: 'vp8', mode: 'rtc', });
     var that = this;
 
@@ -95,9 +96,23 @@ export class DialogAdapter extends EventEmitter {
 
   // private
   async _joinRoom() {
-    let uid= await this._agora_client.join(this.appId, this._roomId, this.token, this._clientId);
-    console.warn("_joinRoom");
-    console.warn(this._roomId);
+    // request token
+    if (this.tokenAPI!==null) {
+      let token_api=this.tokenAPI+this._roomId+"&uid="+this._clientId;
+      try {
+        const respJson = await fetch(`${token_api}`).then(r => r.json());
+        let uid = respJson.uid;
+        let token = respJson.token;
+        alert(uid+token);
+        await this._agora_client.join(this.appId, this._roomId, token, this._clientId);
+    } catch (e) {
+      console.error("Error fetching whats-new", e);
+    }
+  } else {
+    await this._agora_client.join(this.appId, this._roomId, null, this._clientId);
+  }
+
+    
     await this.setLocalMediaStream(this._localMediaStream);
   }
 

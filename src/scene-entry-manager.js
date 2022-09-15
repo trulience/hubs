@@ -231,7 +231,8 @@ export default class SceneEntryManager {
       if (!this.hubChannel.can("spawn_and_move_media")) return;
       const { entity, orientation } = addMedia(
         src,
-        "#interactable-media",
+        //"#interactable-media",
+        "#interactable-agora-media",
         //"#static-media4", 
         contentOrigin,
         null,
