@@ -305,8 +305,13 @@
                 <a-entity
                     class="noninteractable"
                     body-helper="type: dynamic; mass: 10; collisionFilterGroup: 1; collisionFilterMask: 15;"
+                    owned-object-limiter="counter: #media-counter"
                     set-unowned-body-kinematic
+                    is-remote-hover-target
+                    tags="isHandCollisionTarget: true; isHoldable: true; offersHandConstraint: true; offersRemoteConstraint: true; inspectable: true;"
+                    floaty-object="modifyGravityOnRelease: true; autoLockOnLoad: true;"
                     set-yxz-order
+                    listed-media
                     chromakey="green"
                 >    
                     <!--
