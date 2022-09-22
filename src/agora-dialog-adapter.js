@@ -193,7 +193,7 @@ export class DialogAdapter extends EventEmitter {
   }
 
   // public - void 
-  async setLocalMediaStream(stream) {
+  async setLocalMediaStream(stream, isDisplayMedia) {
     await this._agora_client.unpublish();
 
     if (!stream) {
@@ -215,7 +215,7 @@ export class DialogAdapter extends EventEmitter {
           });
           if (this.localTracks &&this.localTracks.videoTrack) {
             const isMobile = AFRAME.utils.device.isMobile();
-            if (!isMobile && getParameterByName("seat")!=null && getParameterByName("virtualbg")!="false") {
+            if (!isMobile && getParameterByName("seat")!=null && getParameterByName("virtualbg")!="false" && !isDisplayMedia) {
               // enable auto green screen virtual background
               this.extension = new VirtualBackgroundExtension();
               AgoraRTC.registerExtensions([this.extension]);

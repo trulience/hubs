@@ -382,7 +382,7 @@ export default class MediaDevicesManager extends EventEmitter {
           this.audioSystem.addStreamToOutboundAudio("screenshare", newStream);
         }
 
-        await APP.dialog.setLocalMediaStream(this._mediaStream);
+        await APP.dialog.setLocalMediaStream(this._mediaStream,isDisplayMedia);
 
         const mediaDevice = isDisplayMedia ? MediaDevices.SCREEN : MediaDevices.CAMERA;
         this._permissionsStatus[mediaDevice] = PermissionStatus.GRANTED;

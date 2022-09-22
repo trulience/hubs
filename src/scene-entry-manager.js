@@ -227,13 +227,11 @@ export default class SceneEntryManager {
   _setupMedia = () => {
     const offset = { x: 0, y: 0, z: -1.5 };
    
-    const spawnMediaInfrontOfPlayer = (src, contentOrigin) => {
+    const spawnMediaInfrontOfPlayer = (src, contentOrigin, isCam) => {
       if (!this.hubChannel.can("spawn_and_move_media")) return;
       const { entity, orientation } = addMedia(
         src,
-        //"#interactable-media",
-        getParameterByName("seat")===null ? "#interactable-media" : "#non-interactable-chromakey-media",
-        //"#static-media4", 
+        getParameterByName("seat")!==null && isCam ? "#non-interactable-chromakey-media" : "#interactable-media",
         contentOrigin,
         null,
         !(src instanceof MediaStream),
@@ -242,7 +240,7 @@ export default class SceneEntryManager {
 
       // BEBUG
 
-      if (getParameterByName("seat")===null) {
+      if (getParameterByName("seat")===null || !isCam) {
         orientation.then(or => {
           entity.setAttribute("offset-relative-to", {
             target: "#avatar-pov-node",
@@ -354,7 +352,7 @@ export default class SceneEntryManager {
         if (target === "avatar") {
           this.avatarRig.setAttribute("player-info", { isSharingAvatarCamera: true });
         } else {
-          currentVideoShareEntity = spawnMediaInfrontOfPlayer(this.mediaDevicesManager.mediaStream, undefined);
+          currentVideoShareEntity = spawnMediaInfrontOfPlayer(this.mediaDevicesManager.mediaStream, undefined,!isDisplayMedia);
           // Wire up custom removal event which will stop the stream.
           currentVideoShareEntity.setAttribute(
             "emit-scene-event-on-remove",
@@ -364,7 +362,6 @@ export default class SceneEntryManager {
           // if param for seat then move to that position
           // set chromakey
           if (!isDisplayMedia) {
-            currentVideoShareEntity.setAttribute("chromakey", "green");   
             if (getParameterByName("seat")!==null) {
               let seat=parseInt(getParameterByName("seat"));   
               currentVideoShareEntity.setAttribute("position", this.userSeats[seat-1]);	
