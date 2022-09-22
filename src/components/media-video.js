@@ -463,10 +463,16 @@ AFRAME.registerComponent("media-video", {
       const material = new THREE.MeshBasicMaterial();
       material.toneMapped = false;
 
+      /*
+      var benw = this.el.getAttribute("benw");
+      console.error(benw);
+      window.benw=this.el;
+      */
       var chromakey = this.el.getAttribute("chromakey");
+      /*
       if (!chromakey && this.data && this.data.contentType && this.data.contentType=="video/vnd.hubs-webrtc") {
         chromakey="green";
-      }
+      }*/
       if (chromakey) {
         if (chromakey == 'red') {
           material.onBeforeCompile = (shader) => {
@@ -481,6 +487,7 @@ AFRAME.registerComponent("media-video", {
           };
         } else if (chromakey == 'green') {
           material.onBeforeCompile = (shader) => {
+            // flip
           shader.vertexShader=shader.vertexShader.replace(`#include <uv_vertex>`,
           `#ifdef USE_UV
             vUv = ( uvTransform * vec3( uv, 1 ) ).xy;

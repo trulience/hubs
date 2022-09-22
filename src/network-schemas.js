@@ -131,7 +131,7 @@ function registerNetworkSchemas() {
 
 
   NAF.schemas.add({
-    template: "#interactable-agora-media",
+    template: "#non-interactable-chromakey-media",
     components: [
       {
         component: "position",

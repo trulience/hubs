@@ -215,7 +215,7 @@ export class DialogAdapter extends EventEmitter {
           });
           if (this.localTracks &&this.localTracks.videoTrack) {
             const isMobile = AFRAME.utils.device.isMobile();
-            if (!isMobile && getParameterByName("seat")!=null) {
+            if (!isMobile && getParameterByName("seat")!=null && getParameterByName("virtualbg")!="false") {
               // enable auto green screen virtual background
               this.extension = new VirtualBackgroundExtension();
               AgoraRTC.registerExtensions([this.extension]);

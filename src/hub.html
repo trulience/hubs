@@ -301,7 +301,7 @@
                 </a-entity>
             </template>
 
-            <template id="interactable-agora-media">
+            <template id="non-interactable-chromakey-media">
                 <a-entity
                     class="noninteractable"
                     body-helper="type: dynamic; mass: 10; collisionFilterGroup: 1; collisionFilterMask: 15;"
@@ -317,6 +317,7 @@
                     position-at-border__freeze="target:.freeze-menu"
                     position-at-border__freeze-unprivileged="target:.freeze-unprivileged-menu"
                     listed-media
+                    chromakey="green"
                 >    
                     <!--
                     <a-entity class="ui interactable-ui">

@@ -232,7 +232,7 @@ export default class SceneEntryManager {
       const { entity, orientation } = addMedia(
         src,
         //"#interactable-media",
-        getParameterByName("seat")===null ? "#interactable-media" : "#interactable-agora-media",
+        getParameterByName("seat")===null ? "#interactable-media" : "#non-interactable-chromakey-media",
         //"#static-media4", 
         contentOrigin,
         null,
@@ -392,7 +392,6 @@ export default class SceneEntryManager {
         const { entity, orientation } = addMedia(
           "load_avatar",
           "#static-media4",
-          //"#interactable-media",
           null,
           null,
           false,
