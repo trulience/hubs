@@ -130,7 +130,7 @@ export const SCHEMA = {
         disableStrafing: { type: "bool", default: false },
         disableTeleporter: { type: "bool", default: false },
         disableAutoPixelRatio: { type: "bool", default: false },
-        movementSpeedModifier: { type: "number", default: 1 },
+        movementSpeedModifier: { type: "number", default: 2 },
         disableEchoCancellation: { type: "bool", default: isFirefoxReality },
         disableNoiseSuppression: { type: "bool", default: isFirefoxReality },
         disableAutoGainControl: { type: "bool", default: isFirefoxReality },
