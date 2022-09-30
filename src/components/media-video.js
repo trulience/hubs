@@ -91,7 +91,7 @@ AFRAME.registerComponent("media-video", {
     this.changeVolumeBy = this.changeVolumeBy.bind(this);
     this.togglePlaying = this.togglePlaying.bind(this);
     this.setupAudio = this.setupAudio.bind(this);
-
+    this.lookAtCamera = false;
     this.audioSystem = this.el.sceneEl.systems["hubs-systems"].audioSystem;
 
     this.lastUpdate = 0;
@@ -463,6 +463,10 @@ AFRAME.registerComponent("media-video", {
       const material = new THREE.MeshBasicMaterial();
       material.toneMapped = false;
 
+      if (window.APP.entryManager && this.el.getAttribute("lookAt")) {
+        this.lookAtCamera = window.APP.entryManager.getRotation() === 'lookAt';
+      }
+
       var chromakey = this.el.getAttribute("chromakey");
       if (chromakey) {
         if (chromakey == 'red') {
@@ -605,6 +609,16 @@ AFRAME.registerComponent("media-video", {
       if (url.indexOf("load_avatar") > -1) {
         videoEl.srcObject = window.APP.rvstresm; //document.getElementById("wall-avatar").srcObject; // = new MediaStream(stream.getVideoTracks());
       }
+      else if (url.indexOf("load_music") > -1) {
+        const vstream = await APP.dialog.getMediaStream("load_music", "video");
+        let newStream = new MediaStream();
+
+        //astream.getTracks().forEach(track => newStream.addTrack(track));
+        vstream.getTracks().forEach(track => newStream.addTrack(track));
+
+
+        videoEl.srcObject = newStream; // new MediaStream(stream.getVideoTracks());
+      }
       else if (url.startsWith("hubs://")) {
         const streamClientId = url.substring(7).split("/")[1]; // /clients/<client id>/video is only URL for now
         const stream = await APP.dialog.getMediaStream(streamClientId, "video");
@@ -619,9 +633,11 @@ AFRAME.registerComponent("media-video", {
             const stream = await APP.dialog.getMediaStream(peerId, "video").catch(e => {
               console.error(`Error getting video stream for ${peerId}`, e);
             });
+            /*
             if (stream) {
               videoEl.srcObject = document.getElementById("wall-avatar").srcObject; // new MediaStream(stream);
             }
+            */
           }
         };
         APP.dialog.on("stream_updated", this._onStreamUpdated, this);
@@ -811,7 +827,7 @@ AFRAME.registerComponent("media-video", {
 
   tick: (() => {
     const targetPos = new THREE.Vector3();
-    const worldPos = new THREE.Vector3();
+
     return function () {
       if (!this.video) return;
 
@@ -857,16 +873,15 @@ AFRAME.registerComponent("media-video", {
       }
 
       //console.log(Date.now()," in view ", this.el.object3D.visible);
-      const camera = this.el.sceneEl.camera;
-      const object3D = this.el.object3D;
-
-
-      //  console.log(this.el.getAttribute("ben"));
-      if (camera) {
-        // Set the camera world position as the target.
-        targetPos.setFromMatrixPosition(camera.matrixWorld);
-        //object3D.lookAt(targetPos);
-        object3D.matrixNeedsUpdate = true;
+      if (this.lookAtCamera) {
+        const camera = this.el.sceneEl.camera;
+        const object3D = this.el.object3D;
+        if (camera && object3D.visible) {
+          // Set the camera world position as the target.
+          targetPos.setFromMatrixPosition(camera.matrixWorld);
+          object3D.lookAt(targetPos);
+          object3D.matrixNeedsUpdate = true;
+        }
       }
     };
   })(),

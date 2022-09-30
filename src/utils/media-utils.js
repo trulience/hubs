@@ -175,9 +175,6 @@ export const addMedia = (
       entity.appendChild(templateBody.firstElementChild);
     }
   }
-  
-  //entity.setAttribute('material', 'shader', 'chromakey');
-	//entity.setAttribute('material', 'alphaTest', '0.5');
 
   const needsToBeUploaded = src instanceof File;
 
@@ -232,7 +229,10 @@ export const addMedia = (
     entity.setAttribute("media-loader", { src: `hubs://clients/${NAF.clientId}/video` });
   } else if (src == "load_avatar") {
     entity.setAttribute("media-loader", { src: "hubs://clients/load_avatar/video" });
+  }   else if (src == "load_music") {
+    entity.setAttribute("media-loader", { src: "hubs://clients/load_music/video" });
   } 
+
 
   if (contentOrigin) {
     entity.addEventListener("media_resolved", ({ detail }) => {

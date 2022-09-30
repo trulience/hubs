@@ -40,12 +40,28 @@ export const AvatarAudioDefaults = Object.freeze({
   gain: 1.0
 });
 
+
+/*
 export const MediaAudioDefaults = Object.freeze({
   audioType: AudioType.PannerNode,
   distanceModel: DistanceModelType.Inverse,
   panningModel: PanningModelType.HRTF,
   rolloffFactor: 5,
   refDistance: 5,
+  maxDistance: 10000,
+  coneInnerAngle: 360,
+  coneOuterAngle: 0,
+  coneOuterGain: 0.9,
+  gain: 0.5
+});
+*/
+
+export const MediaAudioDefaults = Object.freeze({
+  audioType: AudioType.PannerNode,
+  distanceModel: DistanceModelType.Exponential,
+  panningModel: PanningModelType.HRTF,
+  rolloffFactor: 9,
+  refDistance: 29,
   maxDistance: 10000,
   coneInnerAngle: 360,
   coneOuterAngle: 0,

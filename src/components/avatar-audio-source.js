@@ -52,7 +52,12 @@ AFRAME.registerComponent("avatar-audio-source", {
     const isRemoved = !this.el.parentNode;
     if (!stream || isRemoved) return;
 
-    APP.sourceType.set(this.el, SourceType.AVATAR_AUDIO_SOURCE);
+    if (this.el.getAttribute("liveMusic")==="true") {
+      APP.sourceType.set(this.el, SourceType.MEDIA_VIDEO);
+    }
+    else {
+      APP.sourceType.set(this.el, SourceType.AVATAR_AUDIO_SOURCE);
+    }
     const { audioType } = getCurrentAudioSettings(this.el);
     const audioListener = this.el.sceneEl.audioListener;
     let audio = this.el.getObject3D(this.attrName);
@@ -61,7 +66,15 @@ AFRAME.registerComponent("avatar-audio-source", {
     } else {
       audio = new THREE.Audio(audioListener);
     }
-    this.audioSystem.addAudio({ sourceType: SourceType.AVATAR_AUDIO_SOURCE, node: audio });
+
+    if (this.el.getAttribute("liveMusic")==="true") {
+      this.audioSystem.addAudio({ sourceType: SourceType.MEDIA_VIDEO, node: audio });
+    }
+    else {
+      this.audioSystem.addAudio({ sourceType: SourceType.AVATAR_AUDIO_SOURCE, node: audio });
+    }
+
+    
 
     if (SHOULD_CREATE_SILENT_AUDIO_ELS) {
       createSilentAudioEl(stream); // TODO: Do the audio els need to get cleaned up?
@@ -229,6 +242,8 @@ AFRAME.registerComponent("zone-audio-source", {
 
   tick() {
     this.el.object3D.getWorldPosition(tmpWorldPos);
+
+
     if (this.trackingEl) {
       const distanceSquared = this.trackingEl.object3D.position.distanceToSquared(tmpWorldPos);
       if (distanceSquared > this.boundingRadiusSquared) {
@@ -298,7 +313,6 @@ AFRAME.registerComponent("audio-target", {
     APP.sourceType.delete(this.el);
 
     this.removeAudio();
-
     this.el.removeAttribute("audio-zone-source");
     this.el.removeEventListener("audio_type_changed", this.createAudio);
   },

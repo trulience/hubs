@@ -20,6 +20,8 @@ export class DialogAdapter extends EventEmitter {
     this._pendingMediaRequests = new Map();
     this._blockedClients = new Map();
     this.scene = null;
+    this._consumers = new Map();
+    this._load_music=false;
     this._serverParams = {};
     this._consumerStats = {};
     this._agora_client = null;
@@ -72,11 +74,21 @@ export class DialogAdapter extends EventEmitter {
         that.resolvePendingMediaRequestForTrack(clientId, user.videoTrack._mediaStreamTrack);
       }
       that.emit("stream_updated", clientId, mediaType);
+      if (clientId==='load_music') {
+        this._load_music=true;
+        window.APP.entryManager.scene.emit("load_music_start");
+      }
     });
 
     this._agora_client.on("user-unpublished", async (user, mediaType) => {
+
       let clientId = user.uid;
+      if (clientId==='load_music') {
+        window.APP.entryManager.scene.emit("load_music_stop");
+        this._load_music=false;
+      }
       that.closeRemote(clientId);
+
     });
 
 
@@ -156,6 +168,10 @@ export class DialogAdapter extends EventEmitter {
   // public - returns promise 
   getMediaStream(clientId, kind = "audio") {
     let track;
+    if (this._clientId === clientId && kind === "audio" && this._load_music) {
+      clientId="load_music";
+    }
+    
     if (this._clientId === clientId) {
       // LOCAL USER
       if (kind === "audio" &&  this.localTracks.audioTrack) {

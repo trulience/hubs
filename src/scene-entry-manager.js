@@ -2,6 +2,9 @@ import qsTruthy from "./utils/qs_truthy";
 import nextTick from "./utils/next-tick";
 import { hackyMobileSafariTest } from "./utils/detect-touchscreen";
 import { SignInMessages } from "./react-components/auth/SignInModal";
+import {
+  getCurrentHubId
+} from "./utils/hub-utils";
 
 const isBotMode = qsTruthy("bot");
 const isMobile = AFRAME.utils.device.isMobile();
@@ -35,18 +38,40 @@ export default class SceneEntryManager {
     this.leftCursorController = document.getElementById("left-cursor-controller");
     this.avatarRig = document.getElementById("avatar-rig");
     this._entered = false;
+    this._musicAvailable = false;
+
     this.performConditionalSignIn = () => {};
     this.history = history;
 
     this.userPosY=getParameterByNameFloat("userPosY", 1.4);
     this.userScale=getParameterByNameFloat("user_scale", 1.4);
-    this.userSeats=[{x: -10, y: this.userPosY, z: 1.7 },{x: -10, y: this.userPosY, z: 3.0 },{x: -10, y: this.userPosY, z: 4.3 },{x: -10, y: this.userPosY, z: 5.6 }];
-    this.userRotation={x: 0, y: 90, z: 0};
+    
+    this.userSeats=new Map ([
+      ['vdSQjr4', [{x: 3.5, y: 1.7, z: 7 },{x: 3.5, y: 1.7, z: 7.2},{x: 3.5, y: 1.7, z: 7.4 },{x: 3.5, y: 1.7, z: 7 }]],      
+      ['default', [{x: -10, y: this.userPosY, z: 1.7 },{x: -10, y: this.userPosY, z: 3.0 },{x: -10, y: this.userPosY, z: 4.3 },{x: -10, y: this.userPosY, z: 5.6 }]]
+    ]);
+    
+    this.userRotations=new Map ([
+      ['vdSQjr4', "lookAt"],      
+      ['default', {x: 0, y: 90, z: 0}]
+    ]);
+    
+    this.userScales=new Map ([
+      ['vdSQjr4',{x: 3, y: 3, z: 3}],      
+      ['default', {x: this.userScale, y: this.userScale, z: this.userScale}]
+    ]);
+    
+
+   
 
     this.avatarPosY=getParameterByNameFloat("avatarPosY", 1.4);
     this.avatarScale=getParameterByNameFloat("avatar_scale", 1.4);    
     this.avatarPosition={x: -10, y: this.avatarPosY, z: 0.4 };
     this.avatarRotation={x: 0, y: 90, z: 0};
+
+    this.musicScale=getParameterByNameFloat("music_scale", 14);    
+    this.musicPosition= {x: 11, y: 4.7, z: 5 };
+    this.musicRotation={x: 0, y: 60, z: 0};
   }
 
   init = () => {
@@ -58,6 +83,29 @@ export default class SceneEntryManager {
       this._setupBlocking();
     });
   };
+
+  getSeatPositions= () => {
+   if (this.userSeats.get(getCurrentHubId())) {
+    return this.userSeats.get(getCurrentHubId());
+   } else {
+    return this.userSeats.get("default");
+   }
+  };
+
+  getScale = () => {
+    if (this.userScales.get(getCurrentHubId())) {
+      return this.userScales.get(getCurrentHubId());
+     } else {
+      return this.userScales.get("default");
+     }
+  }
+  getRotation= () => {
+    if (this.userRotations.get(getCurrentHubId())) {
+     return this.userRotations.get(getCurrentHubId());
+    } else {
+     return this.userRotations.get("default");
+    }
+   };
 
   hasEntered = () => {
     return this._entered;
@@ -71,6 +119,8 @@ export default class SceneEntryManager {
     if (getParameterByName("tru_avatar_id")!==null) {
       window.APP.loadTruAvatar();
     }
+
+  
 
     document.getElementById("viewing-camera").removeAttribute("scene-preview-camera");
 
@@ -122,6 +172,7 @@ export default class SceneEntryManager {
     this.leftCursorController.components["cursor-controller"].enabled = true;
     this._entered = true;
 
+
     // Delay sending entry event telemetry until VR display is presenting.
     (async () => {
       while (enterInVR && !this.scene.renderer.xr.isPresenting) {
@@ -139,6 +190,11 @@ export default class SceneEntryManager {
     this.scene.addState("entered");
 
     APP.mediaDevicesManager.micEnabled = !muteOnEntry;
+
+
+    if (this._musicAvailable || APP.dialog._load_music) {
+      window.APP.entryManager.scene.emit("load_music");
+    } 
   };
 
   whenSceneLoaded = callback => {
@@ -239,7 +295,7 @@ export default class SceneEntryManager {
       );
 
       // BEBUG
-
+    //  entity.setAttribute("lookat",true);
       if (getParameterByName("seat")===null || !isCam) {
         orientation.then(or => {
           entity.setAttribute("offset-relative-to", {
@@ -361,12 +417,16 @@ export default class SceneEntryManager {
             // BEBUG
           // if param for seat then move to that position
           // set chromakey
+
+          //alert(getCurrentHubId());
           if (!isDisplayMedia) {
             if (getParameterByName("seat")!==null) {
               let seat=parseInt(getParameterByName("seat"));   
-              currentVideoShareEntity.setAttribute("position", this.userSeats[seat-1]);	
-              currentVideoShareEntity.setAttribute("rotation", this.userRotation);  
-              currentVideoShareEntity.setAttribute("scale", {x: this.userScale, y: this.userScale, z: this.userScale});	        
+              currentVideoShareEntity.setAttribute("position", this.getSeatPositions()[seat-1]);	
+              if (this.getRotation()!== 'lookAt') {
+                currentVideoShareEntity.setAttribute("rotation", this.getRotation());  
+              }
+              currentVideoShareEntity.setAttribute("scale", this.getScale());	        
             }
           }
           
@@ -401,6 +461,44 @@ export default class SceneEntryManager {
         entity.setAttribute("scale", { x: this.avatarScale, y: this.avatarScale, z: this.avatarScale });
       });
 
+      this.scene.addEventListener("load_music_start", e => {
+        if (this._entered) {
+          window.APP.entryManager.scene.emit("load_music");
+        } else {
+          this._musicAvailable=true;
+        }
+      });
+
+      this.scene.addEventListener("load_music_stop", e => {
+        this._musicAvailable=false;
+        if (AFRAME.scenes[0].querySelectorAll("[liveMusic]").length>0) {
+          AFRAME.scenes[0].querySelectorAll("[liveMusic]")[0].remove();
+        }
+
+      });
+
+    this.scene.addEventListener("load_music", e => {
+      
+      if (AFRAME.scenes[0].querySelectorAll("[liveMusic]").length>0) {
+        AFRAME.scenes[0].querySelectorAll("[liveMusic]")[0].remove();
+      }
+
+      if (!this.hubChannel.can("spawn_and_move_media")) return;  
+        const { entity, orientation } = addMedia(
+          "load_music",
+          "#static-media5",
+          null,
+          null,
+          false,
+          true
+        );
+
+        entity.setAttribute("position", this.musicPosition);	
+        entity.setAttribute("rotation", this.musicRotation);
+        entity.setAttribute("scale", { x: this.musicScale, y: this.musicScale, z: this.musicScale });
+      });
+
+        
     this.scene.addEventListener("action_share_camera", event => {
       if (isHandlingVideoShare) return;
       isHandlingVideoShare = true;
