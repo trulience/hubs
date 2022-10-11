@@ -464,7 +464,11 @@ AFRAME.registerComponent("media-video", {
       material.toneMapped = false;
 
       if (window.APP.entryManager && this.el.getAttribute("lookAt")) {
-        this.lookAtCamera = window.APP.entryManager.getRotation() === 'lookAt';
+        if (this.el.getAttribute("truDH")) {
+          this.lookAtCamera = window.APP.entryManager.getAvatarRotation() === 'lookAt';
+        } else {
+          this.lookAtCamera = window.APP.entryManager.getRotation() === 'lookAt';
+        }
       }
 
       var chromakey = this.el.getAttribute("chromakey");

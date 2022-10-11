@@ -48,27 +48,57 @@ export default class SceneEntryManager {
     
     this.userSeats=new Map ([
       ['vdSQjr4', [{x: 3.5, y: 1.7, z: 7 },{x: 3.5, y: 1.7, z: 7.2},{x: 3.5, y: 1.7, z: 7.4 },{x: 3.5, y: 1.7, z: 7 }]],      
+      ['N4pPrF4', [{x: 3.5, y: 1.7, z: 7 },{x: 3.5, y: 1.7, z: 7.2},{x: 3.5, y: 1.7, z: 7.4 },{x: 3.5, y: 1.7, z: 7 }]],      
+      ['ZWf3YyE', [{x: 3.5, y: 1.7, z: 7 },{x: 3.5, y: 1.7, z: 7.2},{x: 3.5, y: 1.7, z: 7.4 },{x: 3.5, y: 1.7, z: 7 }]],      
+      ['blank', [{x: 3.5, y: 1.7, z: 7 },{x: 3.5, y: 1.7, z: 7.2},{x: 3.5, y: 1.7, z: 7.4 },{x: 3.5, y: 1.7, z: 7 }]],      
       ['default', [{x: -10, y: this.userPosY, z: 1.7 },{x: -10, y: this.userPosY, z: 3.0 },{x: -10, y: this.userPosY, z: 4.3 },{x: -10, y: this.userPosY, z: 5.6 }]]
     ]);
     
     this.userRotations=new Map ([
       ['vdSQjr4', "lookAt"],      
+      ['N4pPrF4', "lookAt"],      
+      ['ZWf3YyE', "lookAt"],      
+      ['blank', "lookAt"],      
       ['default', {x: 0, y: 90, z: 0}]
     ]);
     
     this.userScales=new Map ([
-      ['vdSQjr4',{x: 3, y: 3, z: 3}],      
+      ['vdSQjr4',{x: 3, y: 3, z: 3}],    
+      ['N4pPrF4',{x: 3, y: 3, z: 3}],    
+      ['ZWf3YyE',{x: 3, y: 3, z: 3}],    
+      ['blank',{x: 3, y: 3, z: 3}],      
       ['default', {x: this.userScale, y: this.userScale, z: this.userScale}]
     ]);
     
+    // avatar DH
+    this.avatarPositions=new Map ([
+      ['vdSQjr4',{x: -0.4, y: 6, z: 57.6}],      
+      ['N4pPrF4', {x: 12, y: 2.8, z: -2.3 }],      
+      ['ZWf3YyE', {x: -10, y: 1.4, z: 0.4 }],      
+      ['blank', {x: -10, y: 1.4, z: 0.4 }],      
+      ['default', {x: -10, y: 1.4, z: 0.4 }]
+    ]);
+    
+    //lookAt="true"       
+    this.avatarRotations=new Map ([
+      ['vdSQjr4', {x: 0, y: 180, z: 0}],      
+      ['N4pPrF4',"lookAt"],   
+      ['ZWf3YyE', "lookAt"],      
+      ['blank', "lookAt"],      
+      ['default', {x: 0, y: 90, z: 0}]
+    ]);
+    
+    this.avatarScales=new Map ([
+      ['vdSQjr4',{x: 7.5, y: 7.5, z: 7.5}],    
+      ['N4pPrF4',{x: 1.5, y: 1.5, z: 1.5}],    
+      ['ZWf3YyE',{x: 3, y: 3, z: 3}],    
+      ['blank',{x: 3, y: 3, z: 3}],      
+      ['default', {x: 1.4, y:1.4, z: 1.4}]
+    ]);
 
-   
+    // AFRAME.scenes[0].querySelectorAll("[chromakey]")[0].setAttribute("position", {x: 3.5, y: 1.8, z: 7 })
 
-    this.avatarPosY=getParameterByNameFloat("avatarPosY", 1.4);
-    this.avatarScale=getParameterByNameFloat("avatar_scale", 1.4);    
-    this.avatarPosition={x: -10, y: this.avatarPosY, z: 0.4 };
-    this.avatarRotation={x: 0, y: 90, z: 0};
-
+    // music screen
     this.musicScale=getParameterByNameFloat("music_scale", 14);    
     this.musicPosition= {x: 11, y: 4.7, z: 5 };
     this.musicRotation={x: 0, y: 60, z: 0};
@@ -106,6 +136,31 @@ export default class SceneEntryManager {
      return this.userRotations.get("default");
     }
    };
+
+
+   getAvatarPosition= () => {
+    if (this.avatarPositions.get(getCurrentHubId())) {
+     return this.avatarPositions.get(getCurrentHubId());
+    } else {
+     return this.avatarPositions.get("default");
+    }
+   };
+ 
+   getAvatarScale = () => {
+     if (this.avatarScales.get(getCurrentHubId())) {
+       return this.avatarScales.get(getCurrentHubId());
+      } else {
+       return this.avatarScales.get("default");
+      }
+   }
+   getAvatarRotation= () => {
+     if (this.avatarRotations.get(getCurrentHubId())) {
+      return this.avatarRotations.get(getCurrentHubId());
+     } else {
+      return this.avatarRotations.get("default");
+     }
+    };
+ 
 
   hasEntered = () => {
     return this._entered;
@@ -456,9 +511,11 @@ export default class SceneEntryManager {
         );
 
         entity.setAttribute("chromakey", "red");   
-        entity.setAttribute("position", this.avatarPosition);	
-        entity.setAttribute("rotation", this.avatarRotation);
-        entity.setAttribute("scale", { x: this.avatarScale, y: this.avatarScale, z: this.avatarScale });
+        entity.setAttribute("position", this.getAvatarPosition());
+        if (this.getAvatarRotation()!== 'lookAt') {	
+          entity.setAttribute("rotation", this.getAvatarRotation());
+        }
+        entity.setAttribute("scale", this.getAvatarScale());
       });
 
       this.scene.addEventListener("load_music_start", e => {
@@ -509,13 +566,6 @@ export default class SceneEntryManager {
         error: shareError
       });      
       
-        
-      /*
-      currentVideoShareEntity.setAttribute("ben2", "rr7");   
-      currentVideoShareEntity.setAttribute("position", {x: -10, y: 1.30, z: this.avatarPositions[this.avatarCount++] });	
-      currentVideoShareEntity.setAttribute("rotation", {x: 0, y: 90, z: 0});  
-      currentVideoShareEntity.setAttribute("scale", {x: 1.3, y: 1.3, z: 1.3});	            
-      */
     });
 
     this.scene.addEventListener("action_share_screen", () => {
