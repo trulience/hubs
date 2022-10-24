@@ -231,6 +231,8 @@ export const addMedia = (
     entity.setAttribute("media-loader", { src: "hubs://clients/load_avatar/video" });
   }   else if (src == "load_music") {
     entity.setAttribute("media-loader", { src: "hubs://clients/load_music/video" });
+  }   else if (src == "load_dancer") {
+    entity.setAttribute("media-loader", { src: "hubs://clients/load_dancer/video" });
   } 
 
 

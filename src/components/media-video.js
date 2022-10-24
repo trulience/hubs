@@ -466,6 +466,8 @@ AFRAME.registerComponent("media-video", {
       if (window.APP.entryManager && this.el.getAttribute("lookAt")) {
         if (this.el.getAttribute("truDH")) {
           this.lookAtCamera = window.APP.entryManager.getAvatarRotation() === 'lookAt';
+        } else if (this.el.getAttribute("liveDancer")) {
+          this.lookAtCamera = true;
         } else {
           this.lookAtCamera = window.APP.entryManager.getRotation() === 'lookAt';
         }
@@ -616,12 +618,14 @@ AFRAME.registerComponent("media-video", {
       else if (url.indexOf("load_music") > -1) {
         const vstream = await APP.dialog.getMediaStream("load_music", "video");
         let newStream = new MediaStream();
-
-        //astream.getTracks().forEach(track => newStream.addTrack(track));
         vstream.getTracks().forEach(track => newStream.addTrack(track));
-
-
-        videoEl.srcObject = newStream; // new MediaStream(stream.getVideoTracks());
+        videoEl.srcObject = newStream; 
+      }
+      else if (url.indexOf("load_dancer") > -1) {
+        const vstream = await APP.dialog.getMediaStream("load_dancer", "video");
+        let newStream = new MediaStream();
+        vstream.getTracks().forEach(track => newStream.addTrack(track));
+        videoEl.srcObject = newStream; 
       }
       else if (url.startsWith("hubs://")) {
         const streamClientId = url.substring(7).split("/")[1]; // /clients/<client id>/video is only URL for now
