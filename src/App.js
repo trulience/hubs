@@ -1,6 +1,12 @@
 import Store from "./storage/store";
 import MediaSearchStore from "./storage/media-search-store";
 import qsTruthy from "./utils/qs_truthy";
+import chloeMP4 from "./assets/video/chloe_battle.mp4";
+import chloeMP42 from "./assets/video/chloe_battle_v2.mp4";
+import chloeSYK from "./assets/video/chloe_battle_syk.mp4";
+import { getParameterByName } from "./utils/media-url-utils";
+
+import * as ddd from "./MantisRYSK.min.js";
 
 export class App {
   constructor() {
@@ -35,7 +41,7 @@ export class App {
 
     // TODO this comes from aframe and prevents zoom on ipad.
     // This should alreeady be handleed by disable-ios-zoom but it does not appear to work
-    canvas.addEventListener("touchmove", function(event) {
+    canvas.addEventListener("touchmove", function (event) {
       event.preventDefault();
     });
 
@@ -73,6 +79,40 @@ export class App {
     // TODO NAF currently depends on this, it should not
     sceneEl.clock = renderClock;
 
+    let ryskObj = null;
+
+    if (getParameterByName("vvol") !== null) {      
+      ryskObj = new Rysk.RYSKUrl(chloeMP4, chloeSYK);
+      ryskObj.run().then(mesh => { //add mesh to the scene
+        mesh.visible = true;
+        mesh.material.toneMapped = false;
+        window.ryskmesh = mesh;
+        let el = document.createElement("a-entity");
+        el.setAttribute("vvol", "true");
+        el.object3D = mesh;
+        sceneEl.appendChild(el);
+        //el.setAttribute('position',  {x: 5, y: 0.85  , z: 2.7 });
+        //el.setAttribute('rotation',  {x: 0, y: 60, z: 0});
+      });
+      ryskObj.play();
+      window.ryskObj = ryskObj;
+    } else   if (getParameterByName("vvol2") !== null) {      
+      ryskObj = new Rysk.RYSKUrl(chloeMP42, chloeSYK);
+      ryskObj.run().then(mesh => { //add mesh to the scene
+        mesh.visible = true;
+        mesh.material.toneMapped = false;
+        window.ryskmesh = mesh;
+        let el = document.createElement("a-entity");
+        el.setAttribute("vvol", "true");
+        el.object3D = mesh;
+        sceneEl.appendChild(el);
+        //el.setAttribute('position',  {x: 5, y: 0.85  , z: 2.7 });
+        //el.setAttribute('rotation',  {x: 0, y: 60, z: 0});
+      });
+      ryskObj.play();
+      window.ryskObj = ryskObj;
+    }
+
     // Main RAF loop
     function mainTick(_rafTime, xrFrame) {
       // TODO we should probably be using time from the raf loop itself
@@ -87,6 +127,9 @@ export class App {
         sceneEl.tick(time, delta);
       }
 
+      if (ryskObj !== null) {
+        ryskObj.update();
+      }
       renderer.render(sceneEl.object3D, camera);
     }
 
