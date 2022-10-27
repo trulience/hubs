@@ -1,8 +1,8 @@
 import Store from "./storage/store";
 import MediaSearchStore from "./storage/media-search-store";
 import qsTruthy from "./utils/qs_truthy";
-import chloeMP4 from "./assets/video/chloe_battle.mp4";
-import chloeMP42 from "./assets/video/chloe_battle_v2.mp4";
+import chloeMP4 from "./assets/video/chloe_battle_v3.mp4";
+import chloeMP42 from "./assets/video/chloe_battle_v4.mp4";
 import chloeSYK from "./assets/video/chloe_battle_syk.mp4";
 import { getParameterByName } from "./utils/media-url-utils";
 
