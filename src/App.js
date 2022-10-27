@@ -1,8 +1,8 @@
 import Store from "./storage/store";
 import MediaSearchStore from "./storage/media-search-store";
 import qsTruthy from "./utils/qs_truthy";
-import chloeMP4 from "./assets/video/chloe_battle_v3.mp4";
-import chloeMP42 from "./assets/video/chloe_battle_v4.mp4";
+import chloeMP4 from "./assets/video/chloe_battle_v4.mp4";
+//import chloeMP42 from "./assets/video/chloe_battle_v4.mp4";
 import chloeSYK from "./assets/video/chloe_battle_syk.mp4";
 import { getParameterByName } from "./utils/media-url-utils";
 
@@ -97,7 +97,7 @@ export class App {
       ryskObj.play();
       window.ryskObj = ryskObj;
     } else   if (getParameterByName("vvol2") !== null) {      
-      ryskObj = new Rysk.RYSKUrl(chloeMP42, chloeSYK);
+      ryskObj = new Rysk.RYSKUrl(chloeMP4, chloeSYK);
       ryskObj.run().then(mesh => { //add mesh to the scene
         mesh.visible = true;
         mesh.material.toneMapped = false;
