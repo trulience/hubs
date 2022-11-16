@@ -27,12 +27,27 @@ export const PanningModelType = Object.freeze({
   EqualPower: "equalpower"
 });
 
+
+/*
 export const AvatarAudioDefaults = Object.freeze({
   audioType: AudioType.PannerNode,
   distanceModel: DistanceModelType.Inverse,
   panningModel: PanningModelType.HRTF,
   rolloffFactor: 5,
   refDistance: 5,
+  maxDistance: 10000,
+  coneInnerAngle: 180,
+  coneOuterAngle: 360,
+  coneOuterGain: 0.9,
+  gain: 1.0
+});
+*/
+export const AvatarAudioDefaults = Object.freeze({
+  audioType: AudioType.PannerNode,
+  distanceModel: DistanceModelType.Exponential,
+  panningModel: PanningModelType.HRTF,
+  rolloffFactor: 7,
+  refDistance: 15,
   maxDistance: 10000,
   coneInnerAngle: 180,
   coneOuterAngle: 360,

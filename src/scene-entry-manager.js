@@ -104,8 +104,8 @@ export default class SceneEntryManager {
     AFRAME.scenes[0].querySelectorAll("[networked]")[43].setAttribute('scale', {x: 6, y: 6, z: 6 });
     AFRAME.scenes[0].querySelectorAll("[networked]")[43].setAttribute('rotation', {x: 0, y: 260, z: 0});
 
-// GUITAT
-        AFRAME.scenes[0].querySelectorAll("[networked]")[44].setAttribute('position', {x: 6.5, y: 2.15, z: 7 });
+// GUITAr
+    AFRAME.scenes[0].querySelectorAll("[networked]")[44].setAttribute('position', {x: 6.5, y: 2.15, z: 7 });
     AFRAME.scenes[0].querySelectorAll("[networked]")[44].setAttribute('scale', {x: 5, y: 5, z: 5 });
     AFRAME.scenes[0].querySelectorAll("[networked]")[44].setAttribute('rotation',  {x: 0, y: 240, z: 0 });
      */
@@ -523,6 +523,26 @@ export default class SceneEntryManager {
       isHandlingVideoShare = false;
       this.scene.emit("share_video_failed");
     };
+
+
+      let volvt=true;
+    
+      this.scene.addEventListener("toggle_volv", e => {      
+        setInterval(
+          function togg() {
+            if (volvt) {
+              volvt=false;
+              AFRAME.scenes[0].querySelectorAll("[vvol]")[0].setAttribute('position',  {x: 5.5, y: 0.85, z: 0.7 });
+              AFRAME.scenes[0].querySelectorAll("[vvol]")[0].setAttribute('rotation',  {x: 0, y: 60, z: 0});  
+            } else {
+              volvt=true;
+              AFRAME.scenes[0].querySelectorAll("[vvol]")[0].setAttribute('position',  {x: 3, y: 0, z: -1});
+              AFRAME.scenes[0].querySelectorAll("[vvol]")[0].setAttribute('rotation',  {x: 0, y: 60, z: 0});
+            }
+          }
+        ,10000);
+      });
+
 
 
     this.scene.addEventListener("load_avatar", e => {

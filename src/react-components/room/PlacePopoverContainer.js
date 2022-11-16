@@ -2,9 +2,8 @@ import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { ReactComponent as PenIcon } from "../icons/Pen.svg";
 import { ReactComponent as CameraIcon } from "../icons/Camera.svg";
-// import { ReactComponent as TextIcon } from "../icons/Text.svg";
-// import { ReactComponent as LinkIcon } from "../icons/Link.svg";
 import { ReactComponent as GIFIcon } from "../icons/GIF.svg";
+import { ReactComponent as VvolIcon } from "../icons/Star.svg";
 import { ReactComponent as TruIcon } from "../icons/Shield.svg";
 import { ReactComponent as ObjectIcon } from "../icons/Object.svg";
 import { ReactComponent as AvatarIcon } from "../icons/Avatar.svg";
@@ -76,6 +75,13 @@ export function PlacePopoverContainer({ scene, mediaSearchStore, showNonHistorie
               color: "accent1",
               label: <FormattedMessage id="place-popover.item-type.avatar2" defaultMessage="Trulience" />,
               onSelect: () => window.APP.loadTruAvatar()
+            },
+            {
+              id: "volv",
+              icon: VvolIcon,
+              color: "accent1",
+              label: <FormattedMessage id="place-popover.item-type.volv" defaultMessage="VolV" />,
+              onSelect: () => window.APP.entryManager.scene.emit("toggle_volv")
             },
             {
               id: "scene",

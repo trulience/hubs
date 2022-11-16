@@ -134,6 +134,7 @@ AFRAME.registerComponent("avatar-audio-source", {
   },
 
   async _onStreamUpdated(peerId, kind) {
+
     const audio = this.el.getObject3D(this.attrName);
     if (!audio) return;
     const stream = audio.source.mediaStream;

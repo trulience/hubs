@@ -2,7 +2,6 @@ import Store from "./storage/store";
 import MediaSearchStore from "./storage/media-search-store";
 import qsTruthy from "./utils/qs_truthy";
 import chloeMP4 from "./assets/video/chloe_battle_v4.mp4";
-//import chloeMP42 from "./assets/video/chloe_battle_v4.mp4";
 import chloeSYK from "./assets/video/chloe_battle_syk.mp4";
 import { getParameterByName } from "./utils/media-url-utils";
 
@@ -78,6 +77,7 @@ export class App {
 
     // TODO NAF currently depends on this, it should not
     sceneEl.clock = renderClock;
+    
 
     let ryskObj = null;
 
@@ -91,27 +91,12 @@ export class App {
         el.setAttribute("vvol", "true");
         el.object3D = mesh;
         sceneEl.appendChild(el);
-        //el.setAttribute('position',  {x: 5, y: 0.85  , z: 2.7 });
-        //el.setAttribute('rotation',  {x: 0, y: 60, z: 0});
+        el.setAttribute('position', {x: 3, y: 0  , z: -1});
+        el.setAttribute('rotation',  {x: 0, y: 60, z: 0});
       });
       ryskObj.play();
       window.ryskObj = ryskObj;
-    } else   if (getParameterByName("vvol2") !== null) {      
-      ryskObj = new Rysk.RYSKUrl(chloeMP4, chloeSYK);
-      ryskObj.run().then(mesh => { //add mesh to the scene
-        mesh.visible = true;
-        mesh.material.toneMapped = false;
-        window.ryskmesh = mesh;
-        let el = document.createElement("a-entity");
-        el.setAttribute("vvol", "true");
-        el.object3D = mesh;
-        sceneEl.appendChild(el);
-        //el.setAttribute('position',  {x: 5, y: 0.85  , z: 2.7 });
-        //el.setAttribute('rotation',  {x: 0, y: 60, z: 0});
-      });
-      ryskObj.play();
-      window.ryskObj = ryskObj;
-    }
+    } 
 
     // Main RAF loop
     function mainTick(_rafTime, xrFrame) {
