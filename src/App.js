@@ -4,8 +4,9 @@ import qsTruthy from "./utils/qs_truthy";
 import chloeMP4 from "./assets/video/chloe_battle_v4.mp4";
 import chloeSYK from "./assets/video/chloe_battle_syk.mp4";
 import { getParameterByName } from "./utils/media-url-utils";
-
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import * as ddd from "./MantisRYSK.min.js";
+import { Remy } from "./remy";
 
 export class App {
   constructor() {
@@ -59,26 +60,19 @@ export class App {
     });
 
     renderer.setPixelRatio(window.devicePixelRatio);
-
     renderer.debug.checkShaderErrors = qsTruthy("checkShaderErrors");
 
     // These get overridden by environment-system but setting to the highly expected defaults to avoid any extra work
     renderer.physicallyCorrectLights = true;
     renderer.outputEncoding = THREE.sRGBEncoding;
-
     sceneEl.appendChild(renderer.domElement);
 
     const camera = new THREE.PerspectiveCamera(80, window.innerWidth / window.innerHeight, 0.05, 10000);
-
     const audioListener = new THREE.AudioListener();
     camera.add(audioListener);
-
     const renderClock = new THREE.Clock();
 
-    // TODO NAF currently depends on this, it should not
     sceneEl.clock = renderClock;
-    
-
     let ryskObj = null;
 
     if (getParameterByName("vvol") !== null) {      
@@ -91,11 +85,28 @@ export class App {
         el.setAttribute("vvol", "true");
         el.object3D = mesh;
         sceneEl.appendChild(el);
-        el.setAttribute('position', {x: 3, y: 0  , z: -1});
+        //el.setAttribute('position',{x: 5.5, y: 0.45, z: 0.7 }); // {x: 3, y: 0  , z: -1});
+        el.setAttribute('position',{x: 0, y: 0, z: 0 }); 
         el.setAttribute('rotation',  {x: 0, y: 60, z: 0});
       });
       ryskObj.play();
       window.ryskObj = ryskObj;
+    } 
+    
+    if (getParameterByName("remy") !== null) {      
+      let loader = new GLTFLoader();    
+      let avatar = new Remy('https://vr-demo.agora.io/holi/remy',loader).then(object => { 
+        // console.error(object);
+        let el = document.createElement("a-entity");
+        el.setAttribute("remy", "true");
+        el.object3D = object;
+        sceneEl.appendChild(el);
+        // el.setAttribute('position',{x: 3, y: 0.40, z: 3 }); // {x: 3, y: 0  , z: -1});
+        // el.setAttribute('position',{x: 20, y: 1, z: 20 }); 
+        // el.setAttribute('rotation',  {x: 0, y: 60, z: 0});
+        // el.setAttribute('scale',  {x: 0.005, y: 0.005, z: 0.005});
+        // el.setAttribute('scale',  {x: 0.5, y: 0.5, z: 0.5});
+      }); 
     } 
 
     // Main RAF loop

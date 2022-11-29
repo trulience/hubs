@@ -308,9 +308,9 @@ void main() {
     diffuseColor.a *= material.transmissionAlpha + 0.1;
   #endif
   vec4 tColor = vec4( outgoingLight, diffuseColor.a );
-  float a = (length(tColor.rgb - vec3(0.01,0.99,0.01)) - 0.5) * 7.0;
+  float a = (length(tColor.rgb - vec3(0.001,0.001,0.999)) - 0.5) * 7.0;
   gl_FragColor = tColor;
-  if(a<2.1)
+  if(a<1.8)
     discard;
   #include <tonemapping_fragment>
   #include <encodings_fragment>

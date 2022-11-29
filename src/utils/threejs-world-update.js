@@ -24,3 +24,13 @@ With this patch you must make sure to follow these rules or very strange things 
 
 // The changes that require this contract now live in our ThreeJS branch.
 // Retaining this file since it is referenced in many Discord messages and documentation.
+
+/*
+matrixNeedsUpdate
+matrixWorldNeedsUpdate
+applyMatrix
+updateMatrix
+childrenNeedMatrixWorldUpdate
+setMatrixWorld
+getWorldPosition
+*/

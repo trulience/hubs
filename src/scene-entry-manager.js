@@ -50,12 +50,16 @@ export default class SceneEntryManager {
       ['vdSQjr4', [{x: 3.5, y: 1.7, z: 7 },{x: 3.5, y: 1.7, z: 7.2},{x: 3.5, y: 1.7, z: 7.4 },{x: 3.5, y: 1.7, z: 7 }]],      
       ['N4pPrF4', [{x: 3.5, y: 1.7, z: 7 },{x: 3.5, y: 1.7, z: 7.2},{x: 3.5, y: 1.7, z: 7.4 },{x: 3.5, y: 1.7, z: 7.6 }]],      
       ['ZWf3YyE', [{x: 3.5, y: 1.7, z: 7 },{x: 3.5, y: 1.7, z: 7.2},{x: 3.5, y: 1.7, z: 7.4 },{x: 3.5, y: 1.7, z: 7 }]],      
+      ['sSV9Nxx', [{x: 3.5, y: 1.7, z: 7 },{x: 3.5, y: 1.7, z: 7.2},{x: 3.5, y: 1.7, z: 7.4 },{x: 3.5, y: 1.7, z: 7 }]],      
+      ['ysG4DS7', [{x: 3.5, y: 1.5, z: 1},{x: 3.5, y: 1.7, z: 7.2},{x: 3.5, y: 1.7, z: 7.4 },{x: 3.5, y: 1.7, z: 7 }]],      
       ['blank', [{x: 3.5, y: 1.7, z: 7 },{x: 3.5, y: 1.7, z: 7.2},{x: 3.5, y: 1.7, z: 7.4 },{x: 3.5, y: 1.7, z: 7 }]],      
       ['default', [{x: -10, y: this.userPosY, z: 1.7 },{x: -10, y: this.userPosY, z: 3.0 },{x: -10, y: this.userPosY, z: 4.3 },{x: -10, y: this.userPosY, z: 5.6 }]]
     ]);
     
     this.userRotations=new Map ([
       ['vdSQjr4', "lookAt"],      
+      ['sSV9Nxx', "lookAt"],      
+      ['ysG4DS7', "lookAt"],      
       ['N4pPrF4', "lookAt"],      
       ['ZWf3YyE', "lookAt"],      
       ['blank', "lookAt"],      
@@ -63,7 +67,9 @@ export default class SceneEntryManager {
     ]);
     
     this.userScales=new Map ([
-      ['vdSQjr4',{x: 3, y: 3, z: 3}],    
+      ['vdSQjr4',{x: 3, y: 3, z: 3}],   
+      ['sSV9Nxx',{x: 3, y: 3, z: 3}],    
+      ['ysG4DS7',{x: 4, y: 4, z: 4}],    
       ['N4pPrF4',{x: 3, y: 3, z: 3}],    
       ['ZWf3YyE',{x: 3, y: 3, z: 3}],    
       ['blank',{x: 3, y: 3, z: 3}],      
@@ -119,7 +125,7 @@ export default class SceneEntryManager {
     this.musicPosition= {x: 11, y: 4.7, z: 5 };
     this.musicRotation={x: 0, y: 60, z: 0};
 
-    // daner
+    // dancer
     this.dancerScale=getParameterByNameFloat("dancer_scale", 4);    
     this.dancerPosition= {x: 5.5, y: 2.15  , z: 3 };
     this.dancerRotation= "lookAt"; //x: 0, y: 60, z: 0}; //"lookAt";
@@ -532,7 +538,7 @@ export default class SceneEntryManager {
           function togg() {
             if (volvt) {
               volvt=false;
-              AFRAME.scenes[0].querySelectorAll("[vvol]")[0].setAttribute('position',  {x: 5.5, y: 0.85, z: 0.7 });
+              AFRAME.scenes[0].querySelectorAll("[vvol]")[0].setAttribute('position',  {x: 5.5, y: 0.45, z: 0.7 });
               AFRAME.scenes[0].querySelectorAll("[vvol]")[0].setAttribute('rotation',  {x: 0, y: 60, z: 0});  
             } else {
               volvt=true;

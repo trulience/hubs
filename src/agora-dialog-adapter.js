@@ -1,14 +1,14 @@
 
-
-
 import AgoraRTC from 'agora-rtc-sdk-ng';
-import AgoraRTM from 'agora-rtm-sdk'
+import AgoraRTM from 'agora-rtm-sdk';
 import { debug as newDebug } from "debug";
 import EventEmitter from "eventemitter3";
 
 // NOT PUBLIC
 import { getParameterByName, getParameterByNameInt } from "./utils/media-url-utils";
 import VirtualBackgroundExtension from 'agora-extension-virtual-background';
+import { setPose, setMorphs } from "./remy";
+
 // END NOT PUBLIC
 
 const debug = newDebug("agora-dialog-adapter:debug");
@@ -460,7 +460,7 @@ export class DialogAdapter extends EventEmitter {
               this.processor = this.extension.createProcessor();
               await this.processor.init("agora-extension-virtual-background/wasms/agora-wasm.wasm");
               this.localTracks.videoTrack.pipe(this.processor).pipe(this.localTracks.videoTrack.processorDestination);
-              await this.processor.setOptions({ type: 'color', color: "#00ff00" });
+              await this.processor.setOptions({ type: 'color', color: "#0000FF" });
               await this.processor.enable();
             }
             //ENOT PUB
@@ -738,7 +738,7 @@ export class DialogAdapter extends EventEmitter {
         }
       }
 
-    console.log("audioSubs ",audioSubs, "audioExpect ",Object.keys(expectedAudioSubs).length, "audioPubs ", Object.keys(this._audioPublishers).length,"videoSubs ",videoSubs, "videoExpected ",Object.keys(expectedVideoSubs).length,  "videoPubs ", Object.keys(this._videoPublishers).length);
+    // console.log("audioSubs ",audioSubs, "audioExpect ",Object.keys(expectedAudioSubs).length, "audioPubs ", Object.keys(this._audioPublishers).length,"videoSubs ",videoSubs, "videoExpected ",Object.keys(expectedVideoSubs).length,  "videoPubs ", Object.keys(this._videoPublishers).length);
     } else {
       // copy all subs to expected 
       expectedAudioSubs = this._audioPublishers;
@@ -833,7 +833,18 @@ export class DialogAdapter extends EventEmitter {
 
       this.removeUidFromArray(this._vadPublisherByPriority, vadUid);      
       //console.warn("No VAD received " + vadUid);
-    }
+    } else if  (text.startsWith('MOCAP')) {
+      //console.log(senderId, text);
+      var msplit = text.split("###");
+      var name= msplit[1];
+      var paa =  JSON.parse(msplit[2]);
+      var zaa =  JSON.parse(msplit[3]);
+    //  var maa =  JSON.parse(msplit[4]);
+      setPose(paa, zaa);
+
+      //setMorphs(maa);
+      //console.warn("MOCAP received " + name);
+    } 
   }
 
   sendVADEvent() {
@@ -863,7 +874,11 @@ export class DialogAdapter extends EventEmitter {
 
   getInputLevel(track) {
     //var analyser = track._source.volumeLevelAnalyser.analyserNode;
-    var analyser = track._source.analyserNode;
+    var analyser;
+    if (track._source.volumeLevelAnalyser) 
+     analyser=track._source.volumeLevelAnalyser.analyserNode;
+    else 
+    analyser=track._source.analyserNode;
     const bufferLength = analyser.frequencyBinCount;
     var data = new Uint8Array(bufferLength);
     analyser.getByteFrequencyData(data);
@@ -923,7 +938,7 @@ export class DialogAdapter extends EventEmitter {
       this.sendNoVADEvent();
     }
 
-  //  console.log("audioLevel", audioLevel, "background + 10 ", background + this._vad_SilenceOffeset, "_vad_exceedCount", this._vad_exceedCount, "_vad_audioSamplesArr length", this._vad_audioSamplesArr.length, "_vad_subceedCount", this._vad_subceedCount);
+    //console.log("audioLevel", audioLevel, "background + 10 ", background + this._vad_SilenceOffeset, "_vad_exceedCount", this._vad_exceedCount, "_vad_audioSamplesArr length", this._vad_audioSamplesArr.length, "_vad_subceedCount", this._vad_subceedCount);
   }
 
 
