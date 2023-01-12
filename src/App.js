@@ -96,16 +96,16 @@ export class App {
     if (getParameterByName("remy") !== null) {      
       let loader = new GLTFLoader();    
       let avatar = new Remy('https://vr-demo.agora.io/holi/remy',loader).then(object => { 
-        // console.error(object);
+        //console.error(object);
         let el = document.createElement("a-entity");
         el.setAttribute("remy", "true");
         el.object3D = object;
         sceneEl.appendChild(el);
-        // el.setAttribute('position',{x: 3, y: 0.40, z: 3 }); // {x: 3, y: 0  , z: -1});
+        //el.setAttribute('position',{x: 3, y: 0.40, z: 3 }); // {x: 3, y: 0  , z: -1});
         // el.setAttribute('position',{x: 20, y: 1, z: 20 }); 
-        // el.setAttribute('rotation',  {x: 0, y: 60, z: 0});
-        // el.setAttribute('scale',  {x: 0.005, y: 0.005, z: 0.005});
-        // el.setAttribute('scale',  {x: 0.5, y: 0.5, z: 0.5});
+       // el.setAttribute('rotation',  {x: 0, y: 60, z: 0});
+       // el.setAttribute('scale',  {x: 0.005, y: 0.005, z: 0.005});
+        //el.setAttribute('scale',  {x: 0.5, y: 0.5, z: 0.5});
       }); 
     } 
 

@@ -14,7 +14,7 @@ const isDebug = qsTruthy("debug");
 const qs = new URLSearchParams(location.search);
 
 import { addMedia } from "./utils/media-utils";
-import {getParameterByName, getParameterByNameFloat } from "./utils/media-url-utils";
+import { getParameterByName, getParameterByNameFloat } from "./utils/media-url-utils";
 
 import {
   isIn2DInterstitial,
@@ -40,66 +40,76 @@ export default class SceneEntryManager {
     this._entered = false;
     this._musicAvailable = false;
     this._dancerAvailable = false;
-    this.performConditionalSignIn = () => {};
+    this.performConditionalSignIn = () => { };
     this.history = history;
 
-    this.userPosY=getParameterByNameFloat("userPosY", 1.4);
-    this.userScale=getParameterByNameFloat("user_scale", 1.4);
-    
-    this.userSeats=new Map ([
-      ['vdSQjr4', [{x: 3.5, y: 1.7, z: 7 },{x: 3.5, y: 1.7, z: 7.2},{x: 3.5, y: 1.7, z: 7.4 },{x: 3.5, y: 1.7, z: 7 }]],      
-      ['N4pPrF4', [{x: 3.5, y: 1.7, z: 7 },{x: 3.5, y: 1.7, z: 7.2},{x: 3.5, y: 1.7, z: 7.4 },{x: 3.5, y: 1.7, z: 7.6 }]],      
-      ['ZWf3YyE', [{x: 3.5, y: 1.7, z: 7 },{x: 3.5, y: 1.7, z: 7.2},{x: 3.5, y: 1.7, z: 7.4 },{x: 3.5, y: 1.7, z: 7 }]],      
-      ['sSV9Nxx', [{x: 3.5, y: 1.7, z: 7 },{x: 3.5, y: 1.7, z: 7.2},{x: 3.5, y: 1.7, z: 7.4 },{x: 3.5, y: 1.7, z: 7 }]],      
-      ['ysG4DS7', [{x: 3.5, y: 1.5, z: 1},{x: 3.5, y: 1.7, z: 7.2},{x: 3.5, y: 1.7, z: 7.4 },{x: 3.5, y: 1.7, z: 7 }]],      
-      ['blank', [{x: 3.5, y: 1.7, z: 7 },{x: 3.5, y: 1.7, z: 7.2},{x: 3.5, y: 1.7, z: 7.4 },{x: 3.5, y: 1.7, z: 7 }]],      
-      ['default', [{x: -10, y: this.userPosY, z: 1.7 },{x: -10, y: this.userPosY, z: 3.0 },{x: -10, y: this.userPosY, z: 4.3 },{x: -10, y: this.userPosY, z: 5.6 }]]
+    this.userPosY = getParameterByNameFloat("userPosY", 1.4);
+    this.userScale = getParameterByNameFloat("user_scale", 1.4);
+
+    this.userSeats = new Map([
+      ['vdSQjr4', [{ x: 3.5, y: 1.7, z: 7 }, { x: 3.5, y: 1.7, z: 7.2 }, { x: 3.5, y: 1.7, z: 7.4 }, { x: 3.5, y: 1.7, z: 7 }]],
+      ['N4pPrF4', [{ x: 3.5, y: 1.7, z: 7 }, { x: 3.5, y: 1.7, z: 7.2 }, { x: 3.5, y: 1.7, z: 7.4 }, { x: 3.5, y: 1.7, z: 7.6 }]],
+      ['ZWf3YyE', [{ x: 3.5, y: 1.7, z: 7 }, { x: 3.5, y: 1.7, z: 7.2 }, { x: 3.5, y: 1.7, z: 7.4 }, { x: 3.5, y: 1.7, z: 7 }]],
+      ['sSV9Nxx', [{ x: 3.5, y: 1.7, z: 7 }, { x: 3.5, y: 1.7, z: 7.2 }, { x: 3.5, y: 1.7, z: 7.4 }, { x: 3.5, y: 1.7, z: 7 }]],
+      ['ysG4DS7', [{ x: 4, y: 1.5, z: 1 }, { x: 3.5, y: 1.7, z: 7.2 }, { x: 3.5, y: 1.7, z: 7.4 }, { x: 3.5, y: 1.7, z: 7 }]],
+      ['4kRy3gG', [{ x: -2.144, y: 1.2, z: -8.2 }, { x: 3.5, y: 1.7, z: 7.2 }, { x: 3.5, y: 1.7, z: 7.4 }, { x: 3.5, y: 1.7, z: 7 }]],
+      ['blank', [{ x: 3.5, y: 1.7, z: 7 }, { x: 3.5, y: 1.7, z: 7.2 }, { x: 3.5, y: 1.7, z: 7.4 }, { x: 3.5, y: 1.7, z: 7 }]],
+      ['default', [{ x: -10, y: this.userPosY, z: 1.7 }, { x: -10, y: this.userPosY, z: 3.0 }, { x: -10, y: this.userPosY, z: 4.3 }, { x: -10, y: this.userPosY, z: 5.6 }]]
     ]);
-    
-    this.userRotations=new Map ([
-      ['vdSQjr4', "lookAt"],      
-      ['sSV9Nxx', "lookAt"],      
-      ['ysG4DS7', "lookAt"],      
-      ['N4pPrF4', "lookAt"],      
-      ['ZWf3YyE', "lookAt"],      
-      ['blank', "lookAt"],      
-      ['default', {x: 0, y: 90, z: 0}]
+
+    this.userRotations = new Map([
+      ['vdSQjr4', "lookAt"],
+      ['sSV9Nxx', "lookAt"],
+      ['ysG4DS7', "lookAt"],
+      ['N4pPrF4', "lookAt"],
+      ['4kRy3gG', { x: 0, y: 180, z: 0 }],
+      ['ZWf3YyE', "lookAt"],
+      ['blank', "lookAt"],
+      ['default', { x: 0, y: 90, z: 0 }]
     ]);
-    
-    this.userScales=new Map ([
-      ['vdSQjr4',{x: 3, y: 3, z: 3}],   
-      ['sSV9Nxx',{x: 3, y: 3, z: 3}],    
-      ['ysG4DS7',{x: 4, y: 4, z: 4}],    
-      ['N4pPrF4',{x: 3, y: 3, z: 3}],    
-      ['ZWf3YyE',{x: 3, y: 3, z: 3}],    
-      ['blank',{x: 3, y: 3, z: 3}],      
-      ['default', {x: this.userScale, y: this.userScale, z: this.userScale}]
+
+    this.userScales = new Map([
+      ['vdSQjr4', { x: 3, y: 3, z: 3 }],
+      ['sSV9Nxx', { x: 3, y: 3, z: 3 }],
+      ['ysG4DS7', { x: 4, y: 4, z: 4 }],
+      ['4kRy3gG', { x: 2, y: 2, z: 2 }],
+      ['N4pPrF4', { x: 3, y: 3, z: 3 }],
+      ['ZWf3YyE', { x: 3, y: 3, z: 3 }],
+      ['blank', { x: 3, y: 3, z: 3 }],
+      ['default', { x: this.userScale, y: this.userScale, z: this.userScale }]
     ]);
-    
+
     // avatar DH
-    this.avatarPositions=new Map ([
-      ['vdSQjr4',{x: -0.4, y: 6, z: 57.6}],      
-      ['N4pPrF4', {x: 12, y: 2.8, z: -2.3 }],      
-      ['ZWf3YyE', {x: -10, y: 1.4, z: 0.4 }],      
-      ['blank', {x: -10, y: 1.4, z: 0.4 }],      
-      ['default', {x: -10, y: 1.4, z: 0.4 }]
+    this.avatarPositions = new Map([
+      ['vdSQjr4', { x: -0.4, y: 6, z: 57.6 }],
+      ['N4pPrF4', { x: 12, y: 2.8, z: -2.3 }],
+      ['ZWf3YyE', { x: -10, y: 1.4, z: 0.4 }],
+      ['blank', { x: -10, y: 1.4, z: 0.4 }],
+      ['4kRy3gG', { x: -5.063, y: -3.34, z: -28.623 }],
+      ['default', { x: -10, y: 1.4, z: 0.4 }]
     ]);
-    
-    //lookAt="true"       
-    this.avatarRotations=new Map ([
-      ['vdSQjr4', {x: 0, y: 180, z: 0}],      
-      ['N4pPrF4',"lookAt"],   
-      ['ZWf3YyE', "lookAt"],      
-      ['blank', "lookAt"],      
-      ['default', {x: 0, y: 90, z: 0}]
+
+
+    this.avatarRotations = new Map([
+      ['vdSQjr4', { x: 0, y: 180, z: 0 }],
+      ['N4pPrF4', "lookAt"],
+      ['4kRy3gG', { x: 0, y: 180, z: 0 }],
+      ['blank', "lookAt"],
+      ['default', { x: 0, y: 90, z: 0 }]
     ]);
-    
-    this.avatarScales=new Map ([
-      ['vdSQjr4',{x: 7.5, y: 7.5, z: 7.5}],    
-      ['N4pPrF4',{x: 1.5, y: 1.5, z: 1.5}],    
-      ['ZWf3YyE',{x: 3, y: 3, z: 3}],    
-      ['blank',{x: 3, y: 3, z: 3}],      
-      ['default', {x: 1.4, y:1.4, z: 1.4}]
+
+    this.avatarChromakey = new Map([
+      ['4kRy3gG', "none"],
+      ['default', "red"]
+    ]);
+
+    this.avatarScales = new Map([
+      ['vdSQjr4', { x: 7.5, y: 7.5, z: 7.5 }],
+      ['N4pPrF4', { x: 1.5, y: 1.5, z: 1.5 }],
+      ['ZWf3YyE', { x: 3, y: 3, z: 3 }],
+      ['4kRy3gG', { x: 6, y: 6, z: 6 }],
+      ['blank', { x: 3, y: 3, z: 3 }],
+      ['default', { x: 1.4, y: 1.4, z: 1.4 }]
     ]);
 
     // drummer 
@@ -121,14 +131,14 @@ export default class SceneEntryManager {
     // AFRAME.scenes[0].querySelectorAll("[networked]")[43].setAttribute("position", {x: 1, y: 1, z: 10 });
 
     // music screen
-    this.musicScale=getParameterByNameFloat("music_scale", 14);    
-    this.musicPosition= {x: 11, y: 4.7, z: 5 };
-    this.musicRotation={x: 0, y: 60, z: 0};
+    this.musicScale = getParameterByNameFloat("music_scale", 14);
+    this.musicPosition = { x: 11, y: 4.7, z: 5 };
+    this.musicRotation = { x: 0, y: 60, z: 0 };
 
     // dancer
-    this.dancerScale=getParameterByNameFloat("dancer_scale", 4);    
-    this.dancerPosition= {x: 5.5, y: 2.15  , z: 3 };
-    this.dancerRotation= "lookAt"; //x: 0, y: 60, z: 0}; //"lookAt";
+    this.dancerScale = getParameterByNameFloat("dancer_scale", 4);
+    this.dancerPosition = { x: 5.5, y: 2.15, z: 3 };
+    this.dancerRotation = "lookAt"; //x: 0, y: 60, z: 0}; //"lookAt";
   }
 
   init = () => {
@@ -141,53 +151,63 @@ export default class SceneEntryManager {
     });
   };
 
-  getSeatPositions= () => {
-   if (this.userSeats.get(getCurrentHubId())) {
-    return this.userSeats.get(getCurrentHubId());
-   } else {
-    return this.userSeats.get("default");
-   }
+  getSeatPositions = () => {
+    if (this.userSeats.get(getCurrentHubId())) {
+      return this.userSeats.get(getCurrentHubId());
+    } else {
+      return this.userSeats.get("default");
+    }
   };
 
   getScale = () => {
     if (this.userScales.get(getCurrentHubId())) {
       return this.userScales.get(getCurrentHubId());
-     } else {
+    } else {
       return this.userScales.get("default");
-     }
+    }
   }
-  getRotation= () => {
+  getRotation = () => {
     if (this.userRotations.get(getCurrentHubId())) {
-     return this.userRotations.get(getCurrentHubId());
+      return this.userRotations.get(getCurrentHubId());
     } else {
-     return this.userRotations.get("default");
+      return this.userRotations.get("default");
     }
-   };
+  };
 
 
-   getAvatarPosition= () => {
+  getAvatarPosition = () => {
     if (this.avatarPositions.get(getCurrentHubId())) {
-     return this.avatarPositions.get(getCurrentHubId());
+      return this.avatarPositions.get(getCurrentHubId());
     } else {
-     return this.avatarPositions.get("default");
+      return this.avatarPositions.get("default");
     }
-   };
- 
-   getAvatarScale = () => {
-     if (this.avatarScales.get(getCurrentHubId())) {
-       return this.avatarScales.get(getCurrentHubId());
-      } else {
-       return this.avatarScales.get("default");
-      }
-   }
-   getAvatarRotation= () => {
-     if (this.avatarRotations.get(getCurrentHubId())) {
+  };
+
+  getAvatarChromakey = () => {
+    if (this.avatarChromakey.get(getCurrentHubId())) {
+      return this.avatarChromakey.get(getCurrentHubId());
+    } else {
+      return this.avatarChromakey.get("default");
+    }
+  };
+
+
+
+  getAvatarScale = () => {
+    if (this.avatarScales.get(getCurrentHubId())) {
+      return this.avatarScales.get(getCurrentHubId());
+    } else {
+      return this.avatarScales.get("default");
+    }
+  }
+  getAvatarRotation = () => {
+    if (this.avatarRotations.get(getCurrentHubId())) {
       return this.avatarRotations.get(getCurrentHubId());
-     } else {
+    } else {
       return this.avatarRotations.get("default");
-     }
-    };
- 
+    }
+  };
+
 
   hasEntered = () => {
     return this._entered;
@@ -195,14 +215,14 @@ export default class SceneEntryManager {
 
   enterScene = async (enterInVR, muteOnEntry) => {
     console.log("Entering scene...");
-    
+
 
     // if avatarid in url
-    if (getParameterByName("tru_avatar_id")!==null) {
+    if (getParameterByName("tru_avatar_id") !== null) {
       window.APP.loadTruAvatar();
     }
 
-  
+
 
     document.getElementById("viewing-camera").removeAttribute("scene-preview-camera");
 
@@ -276,11 +296,11 @@ export default class SceneEntryManager {
 
     if (this._musicAvailable || APP.dialog._load_music) {
       window.APP.entryManager.scene.emit("load_music");
-    } 
+    }
 
     if (this._dancerAvailable || APP.dialog._load_dancer) {
       window.APP.entryManager.scene.emit("load_dancer");
-    } 
+    }
 
   };
 
@@ -369,12 +389,12 @@ export default class SceneEntryManager {
 
   _setupMedia = () => {
     const offset = { x: 0, y: 0, z: -1.5 };
-   
+
     const spawnMediaInfrontOfPlayer = (src, contentOrigin, isCam) => {
       if (!this.hubChannel.can("spawn_and_move_media")) return;
       const { entity, orientation } = addMedia(
         src,
-        getParameterByName("seat")!==null && isCam ? "#non-interactable-chromakey-media" : "#interactable-media",
+        getParameterByName("seat") !== null && isCam ? "#non-interactable-chromakey-media" : "#interactable-media",
         contentOrigin,
         null,
         !(src instanceof MediaStream),
@@ -382,8 +402,8 @@ export default class SceneEntryManager {
       );
 
       // BEBUG
-    //  entity.setAttribute("lookat",true);
-      if (getParameterByName("seat")===null || !isCam) {
+      //  entity.setAttribute("lookat",true);
+      if (getParameterByName("seat") === null || !isCam) {
         orientation.then(or => {
           entity.setAttribute("offset-relative-to", {
             target: "#avatar-pov-node",
@@ -495,28 +515,28 @@ export default class SceneEntryManager {
         if (target === "avatar") {
           this.avatarRig.setAttribute("player-info", { isSharingAvatarCamera: true });
         } else {
-          currentVideoShareEntity = spawnMediaInfrontOfPlayer(this.mediaDevicesManager.mediaStream, undefined,!isDisplayMedia);
+          currentVideoShareEntity = spawnMediaInfrontOfPlayer(this.mediaDevicesManager.mediaStream, undefined, !isDisplayMedia);
           // Wire up custom removal event which will stop the stream.
           currentVideoShareEntity.setAttribute(
             "emit-scene-event-on-remove",
             `event:${MediaDevicesEvents.VIDEO_SHARE_ENDED}`
           );
-            // BEBUG
+          // BEBUG
           // if param for seat then move to that position
           // set chromakey
 
           //alert(getCurrentHubId());
           if (!isDisplayMedia) {
-            if (getParameterByName("seat")!==null) {
-              let seat=parseInt(getParameterByName("seat"));   
-              currentVideoShareEntity.setAttribute("position", this.getSeatPositions()[seat-1]);	
-              if (this.getRotation()!== 'lookAt') {
-                currentVideoShareEntity.setAttribute("rotation", this.getRotation());  
+            if (getParameterByName("seat") !== null) {
+              let seat = parseInt(getParameterByName("seat"));
+              currentVideoShareEntity.setAttribute("position", this.getSeatPositions()[seat - 1]);
+              if (this.getRotation() !== 'lookAt') {
+                currentVideoShareEntity.setAttribute("rotation", this.getRotation());
               }
-              currentVideoShareEntity.setAttribute("scale", this.getScale());	        
+              currentVideoShareEntity.setAttribute("scale", this.getScale());
             }
           }
-          
+
         }
 
         this.scene.emit("share_video_enabled", { source: isDisplayMedia ? MediaDevices.SCREEN : MediaDevices.CAMERA });
@@ -531,116 +551,119 @@ export default class SceneEntryManager {
     };
 
 
-      let volvt=true;
-    
-      this.scene.addEventListener("toggle_volv", e => {      
-        setInterval(
-          function togg() {
-            if (volvt) {
-              volvt=false;
-              AFRAME.scenes[0].querySelectorAll("[vvol]")[0].setAttribute('position',  {x: 5.5, y: 0.45, z: 0.7 });
-              AFRAME.scenes[0].querySelectorAll("[vvol]")[0].setAttribute('rotation',  {x: 0, y: 60, z: 0});  
-            } else {
-              volvt=true;
-              AFRAME.scenes[0].querySelectorAll("[vvol]")[0].setAttribute('position',  {x: 3, y: 0, z: -1});
-              AFRAME.scenes[0].querySelectorAll("[vvol]")[0].setAttribute('rotation',  {x: 0, y: 60, z: 0});
-            }
+    let volvt = true;
+
+    this.scene.addEventListener("toggle_volv", e => {
+      setInterval(
+        function togg() {
+          if (volvt) {
+            volvt = false;
+            AFRAME.scenes[0].querySelectorAll("[vvol]")[0].setAttribute('position', { x: 5.5, y: 0.45, z: 0.7 });
+            AFRAME.scenes[0].querySelectorAll("[vvol]")[0].setAttribute('rotation', { x: 0, y: 60, z: 0 });
+          } else {
+            volvt = true;
+            AFRAME.scenes[0].querySelectorAll("[vvol]")[0].setAttribute('position', { x: 3, y: 0, z: -1 });
+            AFRAME.scenes[0].querySelectorAll("[vvol]")[0].setAttribute('rotation', { x: 0, y: 60, z: 0 });
           }
-        ,10000);
-      });
+        }
+        , 10000);
+    });
 
 
 
     this.scene.addEventListener("load_avatar", e => {
-      if (!this.hubChannel.can("spawn_and_move_media")) return;  
-        const { entity, orientation } = addMedia(
-          "load_avatar",
-          "#static-media4",
-          null,
-          null,
-          false,
-          true
-        );
+      if (!this.hubChannel.can("spawn_and_move_media")) return;
+      const { entity, orientation } = addMedia(
+        "load_avatar",
+        "#static-media4",
+        null,
+        null,
+        false,
+        true
+      );
 
-        entity.setAttribute("chromakey", "red");   
-        entity.setAttribute("position", this.getAvatarPosition());
-        if (this.getAvatarRotation()!== 'lookAt') {	
-          entity.setAttribute("rotation", this.getAvatarRotation());
-        }
-        entity.setAttribute("scale", this.getAvatarScale());
-      });
+      if (this.getAvatarChromakey() !== 'none') {
+        entity.setAttribute("chromakey", this.getAvatarChromakey());
+      }
 
-      this.scene.addEventListener("load_music_start", e => {
-        if (this._entered) {
-          window.APP.entryManager.scene.emit("load_music");
-        } else {
-          this._musicAvailable=true;
-        }
-      });
+      entity.setAttribute("position", this.getAvatarPosition());
+      if (this.getAvatarRotation() !== 'lookAt') {
+        entity.setAttribute("rotation", this.getAvatarRotation());
+      }
+      entity.setAttribute("scale", this.getAvatarScale());
+    });
 
-      this.scene.addEventListener("load_music_stop", e => {
-        this._musicAvailable=false;
-        if (AFRAME.scenes[0].querySelectorAll("[liveMusic]").length>0) {
-          AFRAME.scenes[0].querySelectorAll("[liveMusic]")[0].remove();
-        }
-      });
+    this.scene.addEventListener("load_music_start", e => {
+      if (this._entered) {
+        window.APP.entryManager.scene.emit("load_music");
+      } else {
+        this._musicAvailable = true;
+      }
+    });
 
-    this.scene.addEventListener("load_music", e => {
-      if (AFRAME.scenes[0].querySelectorAll("[liveMusic]").length>0) {
+    this.scene.addEventListener("load_music_stop", e => {
+      this._musicAvailable = false;
+      if (AFRAME.scenes[0].querySelectorAll("[liveMusic]").length > 0) {
         AFRAME.scenes[0].querySelectorAll("[liveMusic]")[0].remove();
       }
-      if (!this.hubChannel.can("spawn_and_move_media")) return;  
-        const { entity, orientation } = addMedia(
-          "load_music",
-          "#static-media5",
-          null,
-          null,
-          false,
-          true
-        );
+    });
 
-        entity.setAttribute("position", this.musicPosition);	
-        entity.setAttribute("rotation", this.musicRotation);
-        entity.setAttribute("scale", { x: this.musicScale, y: this.musicScale, z: this.musicScale });
-      });
+    this.scene.addEventListener("load_music", e => {
+      if (AFRAME.scenes[0].querySelectorAll("[liveMusic]").length > 0) {
+        AFRAME.scenes[0].querySelectorAll("[liveMusic]")[0].remove();
+      }
+      if (!this.hubChannel.can("spawn_and_move_media")) return;
+      const { entity, orientation } = addMedia(
+        "load_music",
+        "#static-media5",
+        null,
+        null,
+        false,
+        true
+      );
 
-      this.scene.addEventListener("load_dancer_start", e => {
-        if (this._entered) {
-          window.APP.entryManager.scene.emit("load_dancer");
-        } else {
-          this._dancerAvailable=true;
-        }
-      });
+      entity.setAttribute("position", this.musicPosition);
+      entity.setAttribute("rotation", this.musicRotation);
+      entity.setAttribute("scale", { x: this.musicScale, y: this.musicScale, z: this.musicScale });
+    });
 
-      this.scene.addEventListener("load_dancer_stop", e => {
-        this._dancerAvailable=false;
-        if (AFRAME.scenes[0].querySelectorAll("[liveDancer]").length>0) {
-          AFRAME.scenes[0].querySelectorAll("[liveDancer]")[0].remove();
-        }
-      });
+    this.scene.addEventListener("load_dancer_start", e => {
+      if (this._entered) {
+        window.APP.entryManager.scene.emit("load_dancer");
+      } else {
+        this._dancerAvailable = true;
+      }
+    });
 
-    this.scene.addEventListener("load_dancer", e => {
-      if (AFRAME.scenes[0].querySelectorAll("[liveDancer]").length>0) {
+    this.scene.addEventListener("load_dancer_stop", e => {
+      this._dancerAvailable = false;
+      if (AFRAME.scenes[0].querySelectorAll("[liveDancer]").length > 0) {
         AFRAME.scenes[0].querySelectorAll("[liveDancer]")[0].remove();
       }
-      if (!this.hubChannel.can("spawn_and_move_media")) return;  
-        const { entity, orientation } = addMedia(
-          "load_dancer",
-          "#static-media6",
-          null,
-          null,
-          false,
-          true
-        );
-        entity.setAttribute("chromakey", "green");   
-        entity.setAttribute("position", this.dancerPosition);	
-        if (this.dancerRotation!== 'lookAt') {
-          entity.setAttribute("rotation", this.dancerRotation);
-        }        
-        entity.setAttribute("scale", { x: this.dancerScale, y: this.dancerScale, z: this.dancerScale });
-      });
-        
-        
+    });
+
+    this.scene.addEventListener("load_dancer", e => {
+      if (AFRAME.scenes[0].querySelectorAll("[liveDancer]").length > 0) {
+        AFRAME.scenes[0].querySelectorAll("[liveDancer]")[0].remove();
+      }
+      if (!this.hubChannel.can("spawn_and_move_media")) return;
+      const { entity, orientation } = addMedia(
+        "load_dancer",
+        "#static-media6",
+        null,
+        null,
+        false,
+        true
+      );
+      entity.setAttribute("chromakey", "green");
+      entity.setAttribute("position", this.dancerPosition);
+      if (this.dancerRotation !== 'lookAt') {
+        entity.setAttribute("rotation", this.dancerRotation);
+      }
+      entity.setAttribute("scale", { x: this.dancerScale, y: this.dancerScale, z: this.dancerScale });
+    });
+
+
     this.scene.addEventListener("action_share_camera", event => {
       if (isHandlingVideoShare) return;
       isHandlingVideoShare = true;
@@ -649,8 +672,8 @@ export default class SceneEntryManager {
         target: event.detail?.target,
         success: shareSuccess,
         error: shareError
-      });      
-      
+      });
+
     });
 
     this.scene.addEventListener("action_share_screen", () => {
