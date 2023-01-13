@@ -53,6 +53,7 @@ export default class SceneEntryManager {
       ['sSV9Nxx', [{ x: 3.5, y: 1.7, z: 7 }, { x: 3.5, y: 1.7, z: 7.2 }, { x: 3.5, y: 1.7, z: 7.4 }, { x: 3.5, y: 1.7, z: 7 }]],
       ['ysG4DS7', [{ x: 4, y: 1.5, z: 1 }, { x: 3.5, y: 1.7, z: 7.2 }, { x: 3.5, y: 1.7, z: 7.4 }, { x: 3.5, y: 1.7, z: 7 }]],
       ['4kRy3gG', [{ x: -2.144, y: 1.2, z: -8.2 }, { x: 3.5, y: 1.7, z: 7.2 }, { x: 3.5, y: 1.7, z: 7.4 }, { x: 3.5, y: 1.7, z: 7 }]],
+      ['y4Wj25u', [{ x: -2.144, y: 1.2, z: -8.2 }, { x: 3.5, y: 1.7, z: 7.2 }, { x: 3.5, y: 1.7, z: 7.4 }, { x: 3.5, y: 1.7, z: 7 }]],      
       ['blank', [{ x: 3.5, y: 1.7, z: 7 }, { x: 3.5, y: 1.7, z: 7.2 }, { x: 3.5, y: 1.7, z: 7.4 }, { x: 3.5, y: 1.7, z: 7 }]],
       ['default', [{ x: -10, y: this.userPosY, z: 1.7 }, { x: -10, y: this.userPosY, z: 3.0 }, { x: -10, y: this.userPosY, z: 4.3 }, { x: -10, y: this.userPosY, z: 5.6 }]]
     ]);
@@ -63,6 +64,7 @@ export default class SceneEntryManager {
       ['ysG4DS7', "lookAt"],
       ['N4pPrF4', "lookAt"],
       ['4kRy3gG', { x: 0, y: 180, z: 0 }],
+      ['y4Wj25u', { x: 0, y: 180, z: 0 }],
       ['ZWf3YyE', "lookAt"],
       ['blank', "lookAt"],
       ['default', { x: 0, y: 90, z: 0 }]
@@ -73,6 +75,7 @@ export default class SceneEntryManager {
       ['sSV9Nxx', { x: 3, y: 3, z: 3 }],
       ['ysG4DS7', { x: 4, y: 4, z: 4 }],
       ['4kRy3gG', { x: 2, y: 2, z: 2 }],
+      ['y4Wj25u', { x: 2, y: 2, z: 2 }],      
       ['N4pPrF4', { x: 3, y: 3, z: 3 }],
       ['ZWf3YyE', { x: 3, y: 3, z: 3 }],
       ['blank', { x: 3, y: 3, z: 3 }],
@@ -85,7 +88,8 @@ export default class SceneEntryManager {
       ['N4pPrF4', { x: 12, y: 2.8, z: -2.3 }],
       ['ZWf3YyE', { x: -10, y: 1.4, z: 0.4 }],
       ['blank', { x: -10, y: 1.4, z: 0.4 }],
-      ['4kRy3gG', { x: -5.063, y: -3.34, z: -28.623 }],
+      ['4kRy3gG', { x: -5.063, y: -3.34, z: -27.623 }],
+      ['y4Wj25u', { x: -5.063, y: -3.34, z: -27.623 }],
       ['default', { x: -10, y: 1.4, z: 0.4 }]
     ]);
 
@@ -94,12 +98,14 @@ export default class SceneEntryManager {
       ['vdSQjr4', { x: 0, y: 180, z: 0 }],
       ['N4pPrF4', "lookAt"],
       ['4kRy3gG', { x: 0, y: 180, z: 0 }],
+      ['y4Wj25u', { x: 0, y: 180, z: 0 }],
       ['blank', "lookAt"],
       ['default', { x: 0, y: 90, z: 0 }]
     ]);
 
     this.avatarChromakey = new Map([
       ['4kRy3gG', "none"],
+      ['y4Wj25u', "none"],
       ['default', "red"]
     ]);
 
@@ -108,6 +114,7 @@ export default class SceneEntryManager {
       ['N4pPrF4', { x: 1.5, y: 1.5, z: 1.5 }],
       ['ZWf3YyE', { x: 3, y: 3, z: 3 }],
       ['4kRy3gG', { x: 6, y: 6, z: 6 }],
+      ['y4Wj25u', { x: 6, y: 6, z: 6 }],
       ['blank', { x: 3, y: 3, z: 3 }],
       ['default', { x: 1.4, y: 1.4, z: 1.4 }]
     ]);
