@@ -354,8 +354,20 @@ export default class MediaDevicesManager extends EventEmitter {
           }
         });
       } else {
+//alert(73);
+        navigator.mediaDevices.enumerateDevices()
+        .then((devices) => {
+          devices.forEach((device) => {
+            console.error(` BOB73 ${device.kind}: ${device.label} id = ${device.deviceId}`);
+          });
+        })
+        .catch((err) => {
+          console.error(`${err.name}: ${err.message}`);
+        });
+
         let constraint={
           video: {
+            deviceId: {exact: '319ec02dd7ec8a6bd30ce657fb6158884eed07cd32b7843c8186a1ef0108cc8a'}, 
             width: isIOS ? { max: 640 } : { max: getParameterByNameInt("resw",1280), ideal: getParameterByNameInt("resw",1280)},
             height: isIOS ? { max: 360 } : { max: getParameterByNameInt("resh",720), ideal: getParameterByNameInt("resh",720)},
             frameRate: isIOS ? { max: 30 } : { ideal: getParameterByNameInt("fps",30), max: getParameterByNameInt("fps",30)}

@@ -489,7 +489,7 @@ AFRAME.registerComponent("media-video", {
             #endif`);
             shader.fragmentShader = TJSFrgProgramMod;
           };
-        } else {
+        } else if (chromakey == 'flip') {
           material.onBeforeCompile = (shader) => {
             shader.vertexShader = shader.vertexShader.replace(`#include <uv_vertex>`,
               `#ifdef USE_UV

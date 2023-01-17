@@ -310,7 +310,7 @@ void main() {
   vec4 tColor = vec4( outgoingLight, diffuseColor.a );
   float a = (length(tColor.rgb - vec3(0.001,0.001,0.999)) - 0.5) * 7.0;
   gl_FragColor = tColor;
-  if(a<1.8)
+  if(a<2.2)
     discard;
   #include <tonemapping_fragment>
   #include <encodings_fragment>

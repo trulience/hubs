@@ -105,7 +105,7 @@ export default class SceneEntryManager {
 
     this.avatarChromakey = new Map([
       ['4kRy3gG', "none"],
-      ['y4Wj25u', "none"],
+      ['y4Wj25u', "flip"],
       ['default', "red"]
     ]);
 
