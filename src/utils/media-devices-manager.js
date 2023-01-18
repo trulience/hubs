@@ -2,8 +2,7 @@ import { EventEmitter } from "eventemitter3";
 import { MediaDevicesEvents, PermissionStatus, MediaDevices, NO_DEVICE_ID } from "./media-devices-utils";
 import { detectOS, detect } from "detect-browser";
 import { isIOS as detectIOS } from "./is-mobile";
-import {getParameterByNameInt } from "./media-url-utils";
-
+import {getParameterByNameInt,getParameterByName } from "./media-url-utils";
 const isMobile = AFRAME.utils.device.isMobile();
 const isIOS = detectIOS();
 
@@ -354,7 +353,6 @@ export default class MediaDevicesManager extends EventEmitter {
           }
         });
       } else {
-//alert(73);
         navigator.mediaDevices.enumerateDevices()
         .then((devices) => {
           devices.forEach((device) => {
@@ -367,10 +365,19 @@ export default class MediaDevicesManager extends EventEmitter {
 
         let constraint={
           video: {
-            deviceId: {exact: '319ec02dd7ec8a6bd30ce657fb6158884eed07cd32b7843c8186a1ef0108cc8a'}, 
             width: isIOS ? { max: 640 } : { max: getParameterByNameInt("resw",1280), ideal: getParameterByNameInt("resw",1280)},
             height: isIOS ? { max: 360 } : { max: getParameterByNameInt("resh",720), ideal: getParameterByNameInt("resh",720)},
             frameRate: isIOS ? { max: 30 } : { ideal: getParameterByNameInt("fps",30), max: getParameterByNameInt("fps",30)}
+          }
+        }
+        if (getParameterByName("deviceId") != null){
+          constraint={
+            video: {
+              deviceId: {exact: getParameterByName("deviceId")}, 
+              width: isIOS ? { max: 640 } : { max: getParameterByNameInt("resw",1280), ideal: getParameterByNameInt("resw",1280)},
+              height: isIOS ? { max: 360 } : { max: getParameterByNameInt("resh",720), ideal: getParameterByNameInt("resh",720)},
+              frameRate: isIOS ? { max: 30 } : { ideal: getParameterByNameInt("fps",30), max: getParameterByNameInt("fps",30)}
+            }
           }
         }
         console.log(constraint);
