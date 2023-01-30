@@ -356,7 +356,7 @@ export default class MediaDevicesManager extends EventEmitter {
         navigator.mediaDevices.enumerateDevices()
         .then((devices) => {
           devices.forEach((device) => {
-            console.error(` BOB73 ${device.kind}: ${device.label} id = ${device.deviceId}`);
+            console.info(` BOB73 ${device.kind}: ${device.label} id = ${device.deviceId}`);
           });
         })
         .catch((err) => {
